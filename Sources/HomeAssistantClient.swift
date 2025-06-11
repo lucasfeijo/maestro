@@ -11,9 +11,11 @@ public protocol HomeAssistantAPI {
 public final class HTTPHomeAssistantClient: HomeAssistantAPI {
     private let baseURL: URL
     private let session: URLSession
+    private let token: String?
 
-    public init(baseURL: URL, session: URLSession = .shared) {
+    public init(baseURL: URL, token: String? = nil, session: URLSession = .shared) {
         self.baseURL = baseURL
+        self.token = token
         self.session = session
     }
 
@@ -23,6 +25,9 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI {
         let url = baseURL.appendingPathComponent("api/states/\(entityId)")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        if let token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let semaphore = DispatchSemaphore(value: 0)
         final class Box: @unchecked Sendable { var value: String? = nil }
@@ -45,6 +50,9 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         var body: [String: Any] = ["entity_id": entityId]
         if let b = brightness { body["brightness_pct"] = b }
         if let ct = colorTemperature { body["color_temp"] = ct }

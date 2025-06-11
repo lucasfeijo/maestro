@@ -59,6 +59,27 @@ extension URL {
     }
 }
 
-let api = HTTPHomeAssistantClient(baseURL: URL(string: "http://homeassistant.local:8123/")!)
+var baseURL = URL(string: "http://homeassistant.local:8123/")!
+var token: String? = nil
+var idx = 1
+let args = CommandLine.arguments
+while idx < args.count {
+    let arg = args[idx]
+    if arg.hasPrefix("--baseurl=") {
+        let value = String(arg.dropFirst("--baseurl=".count))
+        if let url = URL(string: value) { baseURL = url }
+    } else if arg == "--baseurl", idx + 1 < args.count {
+        idx += 1
+        if let url = URL(string: args[idx]) { baseURL = url }
+    } else if arg.hasPrefix("--token=") {
+        token = String(arg.dropFirst("--token=".count))
+    } else if arg == "--token", idx + 1 < args.count {
+        idx += 1
+        token = args[idx]
+    }
+    idx += 1
+}
+
+let api = HTTPHomeAssistantClient(baseURL: baseURL, token: token)
 let maestro = Maestro(api: api)
 try startServer(on: 8080, maestro: maestro)
