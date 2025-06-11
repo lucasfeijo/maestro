@@ -51,7 +51,7 @@ func startServer(on port: Int32, maestro: Maestro) throws {
                     let end = firstLine.range(of: " ", range: start..<firstLine.endIndex)?.lowerBound ?? firstLine.endIndex
                     let path = firstLine[start..<end]
                     if path == "/run" {
-                        _ = maestro.handleStateChange(entityId: "", newState: "")
+                        maestro.run()
                     } else {
                         statusLine = "HTTP/1.1 404 Not Found"
                         body = "Not Found"
