@@ -1,5 +1,9 @@
 import Foundation
+#if os(Linux)
 import Glibc
+#else
+import Darwin
+#endif
 
 /// Minimal HTTP server handling GET requests from Home Assistant.
 func startServer(on port: Int32, maestro: Maestro) throws {
