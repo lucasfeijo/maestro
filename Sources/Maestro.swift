@@ -13,33 +13,10 @@ public final class Maestro {
 
     /// Applies the current scene based on raw Home Assistant state objects.
     public func applyStates(_ states: [[String: Any]]) -> [LightStateChange] {
-        var map: [String: [String: Any]] = [:]
-        for s in states {
-            if let id = s["entity_id"] as? String {
-                map[id] = s
-            }
-        }
-
-        let sceneStr = (map["input_select.living_scene"]?["state"] as? String) ?? "off"
-        let scene: Scene
-        switch sceneStr {
-        case "calm night": scene = .calmNight
-        case "normal": scene = .normal
-        case "bright": scene = .bright
-        case "brightest": scene = .brightest
-        case "preset": scene = .preset
-        default: scene = .off
-        }
-
-        let sunState = map["sun.sun"]?["state"] as? String ?? "below_horizon"
-        let timeOfDay: TimeOfDay = sunState == "above_horizon" ? .daytime : .nighttime
-        let hyperionRunning = map["binary_sensor.living_tv_hyperion_running_condition_for_the_scene"]?["state"] as? String == "on"
-        let diningPresence = map["binary_sensor.dining_espresence"]?["state"] as? String == "on"
-        let kitchenPresence = map["binary_sensor.kitchen_espresence"]?["state"] as? String == "on"
-        let kitchenExtraBrightness = map["input_boolean.kitchen_extra_brightness"]?["state"] as? String == "on"
-        let env = Environment(timeOfDay: timeOfDay, hyperionRunning: hyperionRunning, diningPresence: diningPresence, kitchenPresence: kitchenPresence, kitchenExtraBrightness: kitchenExtraBrightness)
-
-        return applyScene(scene, environment: env, currentStates: map)
+        let context = makeStateContext(from: states)
+        return applyScene(context.scene,
+                          environment: context.environment,
+                          currentStates: context.states)
     }
 
     /// Fetches state from Home Assistant and applies the current scene.
