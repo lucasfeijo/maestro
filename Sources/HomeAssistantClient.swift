@@ -3,7 +3,7 @@ import FoundationNetworking
 
 public protocol HomeAssistantAPI {
     func fetchState(entityId: String) -> String?
-    func setLightState(entityId: String, on: Bool)
+    func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?)
 }
 
 /// Simple HTTP based implementation used by the server. It expects Home Assistant
@@ -40,12 +40,14 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI {
         return box.value
     }
 
-    public func setLightState(entityId: String, on: Bool) {
+    public func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?) {
         let url = baseURL.appendingPathComponent("api/services/light/turn_\(on ? "on" : "off")")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: Any] = ["entity_id": entityId]
+        var body: [String: Any] = ["entity_id": entityId]
+        if let b = brightness { body["brightness_pct"] = b }
+        if let ct = colorTemperature { body["color_temp"] = ct }
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let semaphore = DispatchSemaphore(value: 0)
