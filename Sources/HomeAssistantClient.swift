@@ -5,6 +5,7 @@ import FoundationNetworking
 
 public protocol HomeAssistantAPI {
     func fetchState(entityId: String) -> String?
+    func fetchAllStates() -> [[String: Any]]?
     func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?)
 }
 
@@ -44,6 +45,29 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI {
         }
         task.resume()
         _ = semaphore.wait(timeout: .now() + 5)
+        return box.value
+    }
+
+    public func fetchAllStates() -> [[String: Any]]? {
+        let url = baseURL.appendingPathComponent("api/states")
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        if let token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let semaphore = DispatchSemaphore(value: 0)
+        final class Box: @unchecked Sendable { var value: [[String: Any]]? = nil }
+        let box = Box()
+        let task = session.dataTask(with: request) { data, _, _ in
+            if let data,
+               let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
+                box.value = json
+            }
+            semaphore.signal()
+        }
+        task.resume()
+        _ = semaphore.wait(timeout: .now() + 10)
         return box.value
     }
 

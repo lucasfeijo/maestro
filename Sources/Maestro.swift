@@ -26,8 +26,45 @@ public final class Maestro {
         return changes
     }
 
+    /// Applies the current scene based on raw Home Assistant state objects.
+    public func applyStates(_ states: [[String: Any]]) -> [LightStateChange] {
+        var map: [String: [String: Any]] = [:]
+        for s in states {
+            if let id = s["entity_id"] as? String {
+                map[id] = s
+            }
+        }
+
+        let sceneStr = (map["input_select.living_scene"]?["state"] as? String) ?? "off"
+        let scene: Scene
+        switch sceneStr {
+        case "calm night": scene = .calmNight
+        case "normal": scene = .normal
+        case "bright": scene = .bright
+        case "brightest": scene = .brightest
+        case "preset": scene = .preset
+        default: scene = .off
+        }
+
+        let sunState = map["sun.sun"]?["state"] as? String ?? "below_horizon"
+        let timeOfDay: TimeOfDay = sunState == "above_horizon" ? .daytime : .nighttime
+        let hyperionRunning = map["binary_sensor.living_tv_hyperion_running_condition_for_the_scene"]?["state"] as? String == "on"
+        let diningPresence = map["binary_sensor.dining_espresence"]?["state"] as? String == "on"
+        let kitchenPresence = map["binary_sensor.kitchen_espresence"]?["state"] as? String == "on"
+        let kitchenExtraBrightness = map["input_boolean.kitchen_extra_brightness"]?["state"] as? String == "on"
+        let env = Environment(timeOfDay: timeOfDay, hyperionRunning: hyperionRunning, diningPresence: diningPresence, kitchenPresence: kitchenPresence, kitchenExtraBrightness: kitchenExtraBrightness)
+
+        return applyScene(scene, environment: env, currentStates: map)
+    }
+
+    /// Fetches state from Home Assistant and applies the current scene.
+    public func run() {
+        guard let states = api.fetchAllStates() else { return }
+        _ = applyStates(states)
+    }
+
     /// Generates light changes for a given scene and environment.
-    public func applyScene(_ scene: Scene, environment: Environment) -> [LightStateChange] {
+    public func applyScene(_ scene: Scene, environment: Environment, currentStates: [String: [String: Any]] = [:]) -> [LightStateChange] {
         var changes: [LightStateChange] = []
 
         switch scene {
@@ -135,6 +172,21 @@ public final class Maestro {
         }
 
         for change in changes {
+            if let current = currentStates[change.entityId],
+               let state = current["state"] as? String {
+                var shouldSend = false
+                if (state == "on") != change.on {
+                    shouldSend = true
+                } else if let desired = change.brightness,
+                          let attrs = current["attributes"] as? [String: Any],
+                          let curr = attrs["brightness"] as? Int {
+                    let pct = Int(round(Double(curr) * 100.0 / 255.0))
+                    if pct != desired { shouldSend = true }
+                } else if change.brightness != nil {
+                    shouldSend = true
+                }
+                if !shouldSend { continue }
+            }
             api.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)
         }
         return changes

@@ -11,6 +11,10 @@ final class MaestroTests: XCTestCase {
             states[entityId]
         }
 
+        func fetchAllStates() -> [[String: Any]]? {
+            states.map { ["entity_id": $0.key, "state": $0.value] }
+        }
+
         func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?) {
             setCalls.append(Call(entity: entityId, on: on, brightness: brightness, colorTemp: colorTemperature))
         }
