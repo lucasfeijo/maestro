@@ -11,21 +11,6 @@ public final class Maestro {
         self.clock = clock
     }
 
-    /// Handles a change for a given entity and returns the light changes.
-    @discardableResult
-    public func handleStateChange(entityId: String, newState: String) -> [LightStateChange] {
-        // The basic implementation no longer reacts to specific sensors.
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH"
-        _ = Int(formatter.string(from: clock())) ?? 12
-        let changes: [LightStateChange] = []
-
-        for change in changes {
-            api.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)
-        }
-        return changes
-    }
-
     /// Applies the current scene based on raw Home Assistant state objects.
     public func applyStates(_ states: [[String: Any]]) -> [LightStateChange] {
         var map: [String: [String: Any]] = [:]
