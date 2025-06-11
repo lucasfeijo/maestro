@@ -69,7 +69,7 @@ func startServer(on port: Int32, maestro: Maestro) throws {
 
 var baseURL = URL(string: "http://homeassistant.local:8123/")!
 var token: String? = nil
-var logLights = false
+var simulate = false
 var idx = 1
 let args = CommandLine.arguments
 while idx < args.count {
@@ -85,13 +85,13 @@ while idx < args.count {
     } else if arg == "--token", idx + 1 < args.count {
         idx += 1
         token = args[idx]
-    } else if arg == "--loglights" {
-        logLights = true
+    } else if arg == "--simulate" {
+        simulate = true
     }
     idx += 1
 }
 
 let api = HTTPHomeAssistantClient(baseURL: baseURL, token: token)
-let lights: LightController = logLights ? LoggingLightController() : api
+let lights: LightController = simulate ? LoggingLightController() : api
 let maestro = Maestro(api: api, lights: lights)
 try startServer(on: 8080, maestro: maestro)
