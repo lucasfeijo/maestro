@@ -16,19 +16,23 @@ public final class Maestro {
     /// Applies the current scene based on raw Home Assistant state objects.
     public func applyStates(_ states: [[String: Any]]) -> [LightStateChange] {
         let context = makeStateContext(from: states)
-        return applyScene(context.scene,
-                          environment: context.environment,
-                          currentStates: context.states)
+        let changes = changesForScene(context.scene,
+                                      environment: context.environment)
+        applyChanges(changes, currentStates: context.states)
+        return changes
     }
 
     /// Fetches state from Home Assistant and applies the current scene.
     public func run() {
         guard let states = api.fetchAllStates() else { return }
-        _ = applyStates(states)
+        let context = makeStateContext(from: states)
+        let changes = changesForScene(context.scene,
+                                      environment: context.environment)
+        applyChanges(changes, currentStates: context.states)
     }
 
-    /// Generates light changes for a given scene and environment.
-    public func applyScene(_ scene: Scene, environment: Environment, currentStates: [String: [String: Any]] = [:]) -> [LightStateChange] {
+    /// Computes the desired light changes for a scene in a given environment.
+    public func changesForScene(_ scene: Scene, environment: Environment) -> [LightStateChange] {
         var changes: [LightStateChange] = []
 
         switch scene {
@@ -135,6 +139,11 @@ public final class Maestro {
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
 
+        return changes
+    }
+
+    /// Sends the computed changes to the light controller if needed.
+    public func applyChanges(_ changes: [LightStateChange], currentStates: [String: [String: Any]] = [:]) {
         for change in changes {
             if let current = currentStates[change.entityId],
                let state = current["state"] as? String {
@@ -153,6 +162,12 @@ public final class Maestro {
             }
             lights.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)
         }
+    }
+
+    /// Generates light changes for a given scene and environment.
+    public func applyScene(_ scene: Scene, environment: Environment, currentStates: [String: [String: Any]] = [:]) -> [LightStateChange] {
+        let changes = changesForScene(scene, environment: environment)
+        applyChanges(changes, currentStates: currentStates)
         return changes
     }
 }
