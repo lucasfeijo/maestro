@@ -25,6 +25,7 @@ You can run the server directly using:
 
 ```bash
 swift run maestro --baseurl http://homeassistant.local:8123/ --token YOUR_TOKEN
+swift run maestro --simulate # Print light commands instead of sending them
 ```
 
 This command works on macOS because the POSIX server implementation
