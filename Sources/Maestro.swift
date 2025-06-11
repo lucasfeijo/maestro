@@ -4,10 +4,12 @@ import Foundation
 /// Encapsulates logic to translate Home Assistant events into light states.
 public final class Maestro {
     private let api: HomeAssistantAPI
+    private let lights: LightController
     private let clock: () -> Date
 
-    public init(api: HomeAssistantAPI, clock: @escaping () -> Date = Date.init) {
+    public init(api: HomeAssistantAPI, lights: LightController, clock: @escaping () -> Date = Date.init) {
         self.api = api
+        self.lights = lights
         self.clock = clock
     }
 
@@ -149,7 +151,7 @@ public final class Maestro {
                 }
                 if !shouldSend { continue }
             }
-            api.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)
+            lights.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)
         }
         return changes
     }

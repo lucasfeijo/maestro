@@ -6,12 +6,16 @@ import FoundationNetworking
 public protocol HomeAssistantAPI {
     func fetchState(entityId: String) -> String?
     func fetchAllStates() -> [[String: Any]]?
+}
+
+/// Sends commands to change light states.
+public protocol LightController {
     func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?)
 }
 
 /// Simple HTTP based implementation used by the server. It expects Home Assistant
 /// to expose a REST API accessible at `baseURL`.
-public final class HTTPHomeAssistantClient: HomeAssistantAPI {
+public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
     private let baseURL: URL
     private let session: URLSession
     private let token: String?

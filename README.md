@@ -4,10 +4,12 @@ Home assistant lights orchestrator
 ## Running the server
 
 Build and run the executable with Swift Package Manager. You can provide the
-Home Assistant base URL and an optional long‑lived access token:
+Home Assistant base URL and an optional long‑lived access token. There is also
+an option to log light commands instead of sending them:
 
 ```bash
 swift run maestro --baseurl http://homeassistant.local:8123/ --token YOUR_TOKEN
+swift run maestro --loglights # Log light actions without changing anything
 ```
 
 The package builds on Linux and macOS. On macOS the POSIX server code uses the
@@ -17,6 +19,7 @@ The package builds on Linux and macOS. On macOS the POSIX server code uses the
   `http://homeassistant.local:8123/`.
 - `--token` – long lived Home Assistant token used for API calls. If omitted the
   requests are sent without authentication.
+- `--loglights` – print light commands to stdout instead of sending them.
 
 ## HTTP API
 

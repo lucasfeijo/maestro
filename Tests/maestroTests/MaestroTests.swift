@@ -2,7 +2,7 @@ import XCTest
 @testable import maestro
 
 final class MaestroTests: XCTestCase {
-    private final class MockAPI: HomeAssistantAPI {
+    private final class MockAPI: HomeAssistantAPI, LightController {
         var states: [String: String] = [:]
         struct Call { let entity: String; let on: Bool; let brightness: Int?; let colorTemp: Int? }
         var setCalls: [Call] = []
@@ -23,7 +23,7 @@ final class MaestroTests: XCTestCase {
 
     func testCalmNightDiningPresence() {
         let api = MockAPI()
-        let maestro = Maestro(api: api)
+        let maestro = Maestro(api: api, lights: api)
         let env = Environment(timeOfDay: .nighttime, hyperionRunning: false, diningPresence: true, kitchenPresence: true, kitchenExtraBrightness: false)
         _ = maestro.applyScene(.calmNight, environment: env)
         // dining table bright when presence
@@ -36,7 +36,7 @@ final class MaestroTests: XCTestCase {
 
     func testBrightSceneHyperionRunning() {
         let api = MockAPI()
-        let maestro = Maestro(api: api)
+        let maestro = Maestro(api: api, lights: api)
         let env = Environment(timeOfDay: .daytime, hyperionRunning: true, diningPresence: false, kitchenPresence: false, kitchenExtraBrightness: false)
         _ = maestro.applyScene(.bright, environment: env)
         let tv = api.setCalls.first { $0.entity == "light.tv_light" }
