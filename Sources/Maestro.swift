@@ -14,15 +14,11 @@ public final class Maestro {
     /// Handles a change for a given entity and returns the light changes.
     @discardableResult
     public func handleStateChange(entityId: String, newState: String) -> [LightStateChange] {
-        // Example logic: if a motion sensor turns "on" in the evening, turn on the living room light.
+        // The basic implementation no longer reacts to specific sensors.
         let formatter = DateFormatter()
         formatter.dateFormat = "HH"
-        let hour = Int(formatter.string(from: clock())) ?? 12
-        var changes: [LightStateChange] = []
-
-        if entityId == "sensor.motion" && newState == "on" && hour >= 18 {
-            changes.on("light.living_room")
-        }
+        _ = Int(formatter.string(from: clock())) ?? 12
+        let changes: [LightStateChange] = []
 
         for change in changes {
             api.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)

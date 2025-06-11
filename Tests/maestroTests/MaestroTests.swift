@@ -16,16 +16,6 @@ final class MaestroTests: XCTestCase {
         }
     }
 
-    func testMotionEveningTurnsOnLight() {
-        let api = MockAPI()
-        // Set current time to 19:00
-        let date = ISO8601DateFormatter().date(from: "2024-01-01T19:00:00Z")!
-        let maestro = Maestro(api: api, clock: { date })
-        _ = maestro.handleStateChange(entityId: "sensor.motion", newState: "on")
-        XCTAssertEqual(api.setCalls.count, 1)
-        XCTAssertEqual(api.setCalls.first?.entity, "light.living_room")
-        XCTAssertEqual(api.setCalls.first?.on, true)
-    }
 
     func testCalmNightDiningPresence() {
         let api = MockAPI()

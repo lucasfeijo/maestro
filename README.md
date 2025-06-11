@@ -18,6 +18,19 @@ The package builds on Linux and macOS. On macOS the POSIX server code uses the
 - `--token` – long lived Home Assistant token used for API calls. If omitted the
   requests are sent without authentication.
 
+## HTTP API
+
+The server exposes a single `GET` endpoint on `/run` with no parameters.
+
+Example request:
+
+```bash
+curl http://localhost:8080/run
+```
+
+If the path is anything other than `/run`, the server responds with `404 Not
+Found`.
+
 ## Compiling on macOS
 
 See [docs/compile-macos.md](docs/compile-macos.md) for instructions on building
