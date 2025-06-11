@@ -17,3 +17,8 @@ The package builds on Linux and macOS. On macOS the POSIX server code uses the
   `http://homeassistant.local:8123/`.
 - `--token` – long lived Home Assistant token used for API calls. If omitted the
   requests are sent without authentication.
+
+## Compiling on macOS
+
+See [docs/compile-macos.md](docs/compile-macos.md) for instructions on building
+this package using Swift Package Manager on macOS.
