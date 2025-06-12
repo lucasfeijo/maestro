@@ -1,6 +1,15 @@
 import Foundation
 
-/// Represents the data extracted from Home Assistant states needed to compute light changes.
+/// A context that represents the current state of the home automation system.
+///
+/// StateContext interprets raw Home Assistant states into a structured representation
+/// of the current scene and environment. The context includes:
+///
+/// - The active scene (off, calm night, normal, etc)
+/// - Environmental factors like time of day and presence detection
+///
+/// This structured representation allows for consistent and centralized handling
+/// of light state calculations based on the current conditions.
 public struct StateContext {
     public let scene: Scene
     public let environment: Environment
