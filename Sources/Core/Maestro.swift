@@ -1,11 +1,11 @@
 import Foundation
 
 public final class Maestro {
-    private let api: HomeAssistantAPI
+    private let api: HomeAssistantStateProvider
     private let lights: LightController
     private let program: LightProgram
 
-    public init(api: HomeAssistantAPI, lights: LightController, program: LightProgram) {
+    public init(api: HomeAssistantStateProvider, lights: LightController, program: LightProgram) {
         self.api = api
         self.lights = lights
         self.program = program
