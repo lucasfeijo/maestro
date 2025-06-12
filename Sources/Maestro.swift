@@ -3,10 +3,12 @@ import Foundation
 public final class Maestro {
     private let api: HomeAssistantAPI
     private let lights: LightController
+    private let differ: LightStateDiffer
 
-    public init(api: HomeAssistantAPI, lights: LightController) {
+    public init(api: HomeAssistantAPI, lights: LightController, differ: LightStateDiffer = LightStateDifferDefault()) {
         self.api = api
         self.lights = lights
+        self.differ = differ
     }
 
     /// Fetches state from Home Assistant and applies the current scene.
@@ -24,7 +26,7 @@ public final class Maestro {
         switch result {
         case .success(let states):
             let context = StateContext(states: states)
-            let diff = LightStateDiff(context: context)
+            let diff = differ.makeDiff(context: context)
             for newLightState in diff.simplified.states {
                 lights.setLightState(state: newLightState)
             }
