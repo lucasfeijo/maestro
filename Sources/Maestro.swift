@@ -13,15 +13,6 @@ public final class Maestro {
         self.clock = clock
     }
 
-    /// Applies the current scene based on raw Home Assistant state objects.
-    public func applyStates(_ states: [[String: Any]]) -> [LightStateChange] {
-        let context = makeStateContext(from: states)
-        let changes = changesForScene(context.scene,
-                                      environment: context.environment)
-        applyChanges(changes, currentStates: context.states)
-        return changes
-    }
-
     /// Fetches state from Home Assistant and applies the current scene.
     public func run() {
         guard let states = api.fetchAllStates() else { return }
