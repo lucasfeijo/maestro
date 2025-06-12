@@ -27,7 +27,7 @@ public final class Maestro {
         case .success(let states):
             let context = StateContext(states: states)
             let diff = differ.makeDiff(context: context)
-            for newLightState in diff.simplified.states {
+            for newLightState in diff.simplified {
                 lights.setLightState(state: newLightState)
             }
         case .failure(let error):
