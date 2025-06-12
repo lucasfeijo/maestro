@@ -11,10 +11,6 @@ final class MaestroTests: XCTestCase {
             self.states = states
         }
 
-        func fetchState(entityId: String) -> String? {
-            states[entityId]
-        }
-
         func fetchAllStates() -> Result<HomeAssistantStateMap, Error> {
             .success(states.mapValues { ["state": $0] })
         }

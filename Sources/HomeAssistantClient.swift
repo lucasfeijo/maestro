@@ -4,7 +4,6 @@ import FoundationNetworking
 #endif
 
 public protocol HomeAssistantAPI {
-    func fetchState(entityId: String) -> String?
     func fetchAllStates() -> Result<HomeAssistantStateMap, Error>
 }
 
@@ -24,32 +23,6 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
         self.baseURL = baseURL
         self.token = token
         self.session = session
-    }
-
-    public func fetchState(entityId: String) -> String? {
-        // Build a request to Home Assistant's REST API.
-        // The actual network call is synchronous for simplicity.
-        let url = baseURL.appendingPathComponent("api/states/\(entityId)")
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        if let token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-
-        let semaphore = DispatchSemaphore(value: 0)
-        final class Box: @unchecked Sendable { var value: String? = nil }
-        let box = Box()
-        let task = session.dataTask(with: request) { data, _, _ in
-            if let data,
-               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let state = json["state"] as? String {
-                box.value = state
-            }
-            semaphore.signal()
-        }
-        task.resume()
-        _ = semaphore.wait(timeout: .now() + 5)
-        return box.value
     }
 
     public func fetchAllStates() -> Result<HomeAssistantStateMap, Error> {
