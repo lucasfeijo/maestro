@@ -4,7 +4,7 @@ import XCTest
 final class StateContextTests: XCTestCase {
     func testOffSceneTurnsAllLightsOff() {
         let context = StateContext(states: ["input_select.living_scene": ["state": "off"]])
-        let diff = context.computeDesiredStates()
+        let diff = LightStateDiff(context: context)
         
         // Verify all lights are turned off
         for lightState in diff.changes {
@@ -21,7 +21,7 @@ final class StateContextTests: XCTestCase {
             "binary_sensor.kitchen_espresence": ["state": "off"],
             "input_boolean.kitchen_extra_brightness": ["state": "off"]
         ])
-        let diff = context.computeDesiredStates()
+        let diff = LightStateDiff(context: context)
         
         let tvLight = diff.changes.first { $0.entityId == "light.tv_light" }
         XCTAssertFalse(tvLight?.on ?? true)
@@ -39,7 +39,7 @@ final class StateContextTests: XCTestCase {
             "binary_sensor.kitchen_espresence": ["state": "off"],
             "input_boolean.kitchen_extra_brightness": ["state": "off"]
         ])
-        let diff = context.computeDesiredStates()
+        let diff = LightStateDiff(context: context)
         
         let tvLight = diff.changes.first { $0.entityId == "light.tv_light" }
         XCTAssertFalse(tvLight?.on ?? true)
@@ -63,8 +63,8 @@ final class StateContextTests: XCTestCase {
             "input_boolean.kitchen_extra_brightness": ["state": "off"]
         ])
         
-        let diffWithPresence = contextWithPresence.computeDesiredStates()
-        let diffWithoutPresence = contextWithoutPresence.computeDesiredStates()
+        let diffWithPresence = LightStateDiff(context: contextWithPresence)
+        let diffWithoutPresence = LightStateDiff(context: contextWithoutPresence)
         
         // dining table brighter when presence detected
         let diningWithPresence = diffWithPresence.changes.first { $0.entityId == "light.dining_table_light" }
