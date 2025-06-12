@@ -4,6 +4,14 @@ public struct LightStateDiff {
     public let changes: [LightState]
     public let currentStates: HomeAssistantStateMap
 
+    /// Create a diff directly from a set of changes and the current Home
+    /// Assistant states. This initializer is primarily intended for testing
+    /// so callers can bypass the scene calculation logic.
+    init(changes: [LightState], currentStates: HomeAssistantStateMap) {
+        self.changes = changes
+        self.currentStates = currentStates
+    }
+
     public init(context: StateContext) {
         let scene = context.scene
         let environment = context.environment
