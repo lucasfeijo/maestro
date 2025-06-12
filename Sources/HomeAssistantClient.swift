@@ -5,7 +5,7 @@ import FoundationNetworking
 
 public protocol HomeAssistantAPI {
     func fetchState(entityId: String) -> String?
-    func fetchAllStates() -> [[String: Any]]?
+    func fetchAllStates() -> Result<HomeAssistantStateMap, Error>
 }
 
 /// Sends commands to change light states.
@@ -52,7 +52,7 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
         return box.value
     }
 
-    public func fetchAllStates() -> [[String: Any]]? {
+    public func fetchAllStates() -> Result<HomeAssistantStateMap, Error> {
         let url = baseURL.appendingPathComponent("api/states")
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -61,12 +61,16 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
         }
 
         let semaphore = DispatchSemaphore(value: 0)
-        final class Box: @unchecked Sendable { var value: [[String: Any]]? = nil }
+        final class Box: @unchecked Sendable { var value: Result<HomeAssistantStateMap, Error> = .failure(NSError(domain: "HomeAssistantClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch all states"])) }
         let box = Box()
-        let task = session.dataTask(with: request) { data, _, _ in
-            if let data,
-               let json = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] {
-                box.value = json
+        let task = session.dataTask(with: request) { data, urlResponse, error in
+            if let httpResponse = urlResponse as? HTTPURLResponse,
+               httpResponse.statusCode == 200,
+               let data,
+               let json = try? JSONSerialization.jsonObject(with: data) as? HomeAssistantStateResponse {
+                box.value = .success(json.toMap())
+            } else {
+                box.value = .failure(error ?? NSError(domain: "HomeAssistantClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch all states"]))
             }
             semaphore.signal()
         }

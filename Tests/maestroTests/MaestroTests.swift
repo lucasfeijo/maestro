@@ -3,16 +3,20 @@ import XCTest
 
 final class MaestroTests: XCTestCase {
     private final class MockAPI: HomeAssistantAPI, LightController {
-        var states: [String: String] = [:]
+        private let states: [String: String]
         struct Call { let entity: String; let on: Bool; let brightness: Int?; let colorTemp: Int? }
         var setCalls: [Call] = []
+
+        init(states: [String: String]) {
+            self.states = states
+        }
 
         func fetchState(entityId: String) -> String? {
             states[entityId]
         }
 
-        func fetchAllStates() -> [[String: Any]]? {
-            states.map { ["entity_id": $0.key, "state": $0.value] }
+        func fetchAllStates() -> Result<HomeAssistantStateMap, Error> {
+            .success(states.mapValues { ["state": $0] })
         }
 
         func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?) {
@@ -20,12 +24,18 @@ final class MaestroTests: XCTestCase {
         }
     }
 
-
     func testCalmNightDiningPresence() {
-        let api = MockAPI()
+        let api = MockAPI(states: [
+            "input_select.living_scene": "calm night",
+            "sun.sun": "below_horizon",
+            "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": "off",
+            "binary_sensor.dining_espresence": "on",
+            "binary_sensor.kitchen_espresence": "on",
+            "input_boolean.kitchen_extra_brightness": "off"
+        ])
         let maestro = Maestro(api: api, lights: api)
-        let env = Environment(timeOfDay: .nighttime, hyperionRunning: false, diningPresence: true, kitchenPresence: true, kitchenExtraBrightness: false)
-        _ = maestro.applyScene(.calmNight, environment: env)
+        maestro.run()
+        
         // dining table bright when presence
         let dining = api.setCalls.first { $0.entity == "light.dining_table_light" }
         XCTAssertEqual(dining?.brightness, 30)
@@ -35,10 +45,17 @@ final class MaestroTests: XCTestCase {
     }
 
     func testBrightSceneHyperionRunning() {
-        let api = MockAPI()
+        let api = MockAPI(states: [
+            "input_select.living_scene": "bright",
+            "sun.sun": "above_horizon",
+            "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": "on",
+            "binary_sensor.dining_espresence": "off",
+            "binary_sensor.kitchen_espresence": "off",
+            "input_boolean.kitchen_extra_brightness": "off"
+        ])
         let maestro = Maestro(api: api, lights: api)
-        let env = Environment(timeOfDay: .daytime, hyperionRunning: true, diningPresence: false, kitchenPresence: false, kitchenExtraBrightness: false)
-        _ = maestro.applyScene(.bright, environment: env)
+        maestro.run()
+        
         let tv = api.setCalls.first { $0.entity == "light.tv_light" }
         XCTAssertEqual(tv?.on, false)
     }
