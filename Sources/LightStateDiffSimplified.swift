@@ -29,6 +29,13 @@ public struct LightStateDiffSimplified {
     public init(_ diff: LightStateDiff) {
         self.diff = diff
     }
+
+    /// Create a simplified diff directly from a set of changes and the
+    /// current Home Assistant state map. This bypasses `LightStateDiff` so
+    /// callers can test simplification logic in isolation.
+    public init(changes: [LightState], currentStates: HomeAssistantStateMap) {
+        self.diff = LightStateDiff(changes: changes, currentStates: currentStates)
+    }
 }
 
 extension LightStateDiff {
