@@ -1,9 +1,9 @@
 import Foundation
 
-public struct LightStateDifferDefault: LightStateDiffer {
+public struct LightProgramDefault: LightProgram {
     public init() {}
 
-    public func makeDiff(context: StateContext) -> LightStateDiff {
+    public func computeStateSet(context: StateContext) -> LightStateSet {
         let scene = context.scene
         let environment = context.environment
         let states = context.states
@@ -114,6 +114,6 @@ public struct LightStateDifferDefault: LightStateDiffer {
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
 
-        return LightStateDiff(changes: changes, currentStates: states)
+        return LightStateSet(changes: changes, currentStates: states)
     }
 }

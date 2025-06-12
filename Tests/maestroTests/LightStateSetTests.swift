@@ -1,9 +1,9 @@
 import XCTest
 @testable import maestro
 
-final class LightStateDiffSimplifiedTests: XCTestCase {
+final class LightStateSetTests: XCTestCase {
     func testSimplifiedFiltersUnchangedStates() {
-        let simplified = LightStateDiff(
+        let simplified = LightStateSet(
             changes: [LightState(entityId: "light.tv_light", on: true, brightness: 50)],
             currentStates: [
                 "light.tv_light": [
@@ -16,7 +16,7 @@ final class LightStateDiffSimplifiedTests: XCTestCase {
     }
 
     func testSimplifiedIncludesChangedStates() {
-        let simplified = LightStateDiff(
+        let simplified = LightStateSet(
             changes: [LightState(entityId: "light.tv_light", on: true, brightness: 50)],
             currentStates: [
                 "light.tv_light": [
@@ -30,7 +30,7 @@ final class LightStateDiffSimplifiedTests: XCTestCase {
     }
 
     func testSimplifiedIncludesOnOffChanges() {
-        let simplified = LightStateDiff(
+        let simplified = LightStateSet(
             changes: [LightState(entityId: "light.corner_light", on: false)],
             currentStates: ["light.corner_light": ["state": "on"]]
         ).simplified

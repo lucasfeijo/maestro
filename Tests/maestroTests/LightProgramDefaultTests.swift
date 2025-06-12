@@ -1,10 +1,10 @@
 import XCTest
 @testable import maestro
 
-final class LightStateDifferDefaultTests: XCTestCase {
+final class LightProgramDefaultTests: XCTestCase {
     func testOffSceneTurnsAllLightsOff() {
         let context = StateContext(states: ["input_select.living_scene": ["state": "off"]])
-        let diff = LightStateDifferDefault().makeDiff(context: context)
+        let diff = LightProgramDefault().computeStateSet(context: context)
         
         // Verify all lights are turned off
         for lightState in diff.changes {
@@ -21,7 +21,7 @@ final class LightStateDifferDefaultTests: XCTestCase {
             "binary_sensor.kitchen_espresence": ["state": "off"],
             "input_boolean.kitchen_extra_brightness": ["state": "off"]
         ])
-        let diff = LightStateDifferDefault().makeDiff(context: context)
+        let diff = LightProgramDefault().computeStateSet(context: context)
         
         let tvLight = diff.changes.first { $0.entityId == "light.tv_light" }
         XCTAssertFalse(tvLight?.on ?? true)
@@ -39,7 +39,7 @@ final class LightStateDifferDefaultTests: XCTestCase {
             "binary_sensor.kitchen_espresence": ["state": "off"],
             "input_boolean.kitchen_extra_brightness": ["state": "off"]
         ])
-        let diff = LightStateDifferDefault().makeDiff(context: context)
+        let diff = LightProgramDefault().computeStateSet(context: context)
         
         let tvLight = diff.changes.first { $0.entityId == "light.tv_light" }
         XCTAssertFalse(tvLight?.on ?? true)
@@ -63,8 +63,8 @@ final class LightStateDifferDefaultTests: XCTestCase {
             "input_boolean.kitchen_extra_brightness": ["state": "off"]
         ])
         
-        let diffWithPresence = LightStateDifferDefault().makeDiff(context: contextWithPresence)
-        let diffWithoutPresence = LightStateDifferDefault().makeDiff(context: contextWithoutPresence)
+        let diffWithPresence = LightProgramDefault().computeStateSet(context: contextWithPresence)
+        let diffWithoutPresence = LightProgramDefault().computeStateSet(context: contextWithoutPresence)
         
         // dining table brighter when presence detected
         let diningWithPresence = diffWithPresence.changes.first { $0.entityId == "light.dining_table_light" }

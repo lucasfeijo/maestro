@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LightStateDiff {
+public struct LightStateSet {
     public let changes: [LightState]
     public let currentStates: HomeAssistantStateMap
 
