@@ -1,6 +1,7 @@
 import Foundation
 
 public struct LightProgramSecondary: LightProgram {
+    public let name = "secondary"
     public init() {}
 
     public func computeStateSet(context: StateContext) -> LightStateSet {

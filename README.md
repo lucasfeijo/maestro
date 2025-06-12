@@ -10,6 +10,8 @@ an option to simulate light commands instead of sending them:
 ```bash
 swift run maestro --baseurl http://homeassistant.local:8123/ --token YOUR_TOKEN
 swift run maestro --simulate # Log light actions without changing anything
+# Select a different light program
+swift run maestro --program secondary
 ```
 
 The package builds on Linux and macOS. On macOS the POSIX server code uses the
@@ -20,6 +22,7 @@ The package builds on Linux and macOS. On macOS the POSIX server code uses the
 - `--token` – long lived Home Assistant token used for API calls. If omitted the
   requests are sent without authentication.
 - `--simulate` – print light commands to stdout instead of sending them.
+- `--program` – choose the light program to run (`default` or `secondary`).
 
 ## HTTP API
 
