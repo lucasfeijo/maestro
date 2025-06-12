@@ -5,11 +5,10 @@ import Foundation
 public final class LoggingLightController: LightController {
     public init() {}
 
-    public func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?) {
-        let state = on ? "on" : "off"
-        var message = "[LOG] \(entityId) -> \(state)"
-        if let b = brightness { message += " brightness:\(b)" }
-        if let ct = colorTemperature { message += " colorTemp:\(ct)" }
+    public func setLightState(state: LightState) {
+        var message = "[LOG] \(state.entityId) -> \(state.on ? "on" : "off")"
+        if let b = state.brightness { message += " brightness:\(b)" }
+        if let ct = state.colorTemperature { message += " colorTemp:\(ct)" }
         print(message)
     }
 }

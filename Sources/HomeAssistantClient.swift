@@ -9,7 +9,7 @@ public protocol HomeAssistantAPI {
 
 /// Sends commands to change light states.
 public protocol LightController {
-    func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?)
+    func setLightState(state: LightState)
 }
 
 /// Simple HTTP based implementation used by the server. It expects Home Assistant
@@ -52,17 +52,17 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
         return box.value
     }
 
-    public func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?) {
-        let url = baseURL.appendingPathComponent("api/services/light/turn_\(on ? "on" : "off")")
+    public func setLightState(state: LightState) {
+        let url = baseURL.appendingPathComponent("api/services/light/turn_\(state.on ? "on" : "off")")
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         if let token {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        var body: [String: Any] = ["entity_id": entityId]
-        if let b = brightness { body["brightness_pct"] = b }
-        if let ct = colorTemperature { body["color_temp"] = ct }
+        var body: [String: Any] = ["entity_id": state.entityId]
+        if let b = state.brightness { body["brightness_pct"] = b }
+        if let ct = state.colorTemperature { body["color_temp"] = ct }
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let semaphore = DispatchSemaphore(value: 0)

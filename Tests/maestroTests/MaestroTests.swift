@@ -4,7 +4,7 @@ import XCTest
 final class MaestroTests: XCTestCase {
     private final class MockAPI: HomeAssistantAPI, LightController {
         private let states: [String: String]
-        struct Call { let entity: String; let on: Bool; let brightness: Int?; let colorTemp: Int? }
+        struct Call { let state: LightState }
         var setCalls: [Call] = []
 
         init(states: [String: String]) {
@@ -15,8 +15,8 @@ final class MaestroTests: XCTestCase {
             .success(states.mapValues { ["state": $0] })
         }
 
-        func setLightState(entityId: String, on: Bool, brightness: Int?, colorTemperature: Int?) {
-            setCalls.append(Call(entity: entityId, on: on, brightness: brightness, colorTemp: colorTemperature))
+        func setLightState(state: LightState) {
+            setCalls.append(Call(state: state))
         }
     }
 
@@ -33,11 +33,11 @@ final class MaestroTests: XCTestCase {
         maestro.run()
         
         // dining table bright when presence
-        let dining = api.setCalls.first { $0.entity == "light.dining_table_light" }
-        XCTAssertEqual(dining?.brightness, 30)
+        let dining = api.setCalls.first { $0.state.entityId == "light.dining_table_light" }
+        XCTAssertEqual(dining?.state.brightness, 30)
         // tv shelf group on because hyperion off
-        let shelf = api.setCalls.first { $0.entity == "light.tv_shelf_group" }
-        XCTAssertEqual(shelf?.on, true)
+        let shelf = api.setCalls.first { $0.state.entityId == "light.tv_shelf_group" }
+        XCTAssertEqual(shelf?.state.on, true)
     }
 
     func testBrightSceneHyperionRunning() {
@@ -52,7 +52,7 @@ final class MaestroTests: XCTestCase {
         let maestro = Maestro(api: api, lights: api)
         maestro.run()
         
-        let tv = api.setCalls.first { $0.entity == "light.tv_light" }
-        XCTAssertEqual(tv?.on, false)
+        let tv = api.setCalls.first { $0.state.entityId == "light.tv_light" }
+        XCTAssertEqual(tv?.state.on, false)
     }
 }

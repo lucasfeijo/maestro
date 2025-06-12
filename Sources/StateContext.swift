@@ -6,7 +6,7 @@ public struct StateContext {
     public let environment: Environment
     public let states: HomeAssistantStateMap
 
-    public static func computeFrom(states: HomeAssistantStateMap) -> StateContext {
+    public init(states: HomeAssistantStateMap) {
         let sceneStr = (states["input_select.living_scene"]?["state"] as? String) ?? "off"
         let scene: Scene
         switch sceneStr {
@@ -30,12 +30,8 @@ public struct StateContext {
                             kitchenPresence: kitchenPresence,
                             kitchenExtraBrightness: kitchenExtraBrightness)
 
-        return StateContext(scene: scene, environment: env, states: states)
-    }
-
-    public init(scene: Scene, environment: Environment, states: HomeAssistantStateMap) {
         self.scene = scene
-        self.environment = environment
+        self.environment = env
         self.states = states
     }
 
@@ -151,16 +147,3 @@ public struct StateContext {
     }
 }
 
-public typealias HomeAssistantStateResponse = [[String: Any]]
-
-public typealias HomeAssistantStateMap = [String: [String: Any]]
-
-extension HomeAssistantStateResponse {
-    public func toMap() -> HomeAssistantStateMap {
-        reduce(into: [:]) { map, state in
-            if let id = state["entity_id"] as? String {
-                map[id] = state
-            }
-        }
-    }
-}

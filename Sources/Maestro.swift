@@ -18,10 +18,10 @@ public final class Maestro {
         let result = api.fetchAllStates()
         switch result {
         case .success(let states):
-            let context = StateContext.computeFrom(states: states)
+            let context = StateContext(states: states)
             let diff = context.computeDesiredStates()
-            for change in diff.simplified {
-                lights.setLightState(entityId: change.entityId, on: change.on, brightness: change.brightness, colorTemperature: change.colorTemperature)
+            for newLightState in diff.simplified {
+                lights.setLightState(state: newLightState)
             }
         case .failure(let error):
                 print("Failed to fetch home assistant states: \(error)")
