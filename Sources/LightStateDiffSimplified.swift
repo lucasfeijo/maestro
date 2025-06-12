@@ -37,9 +37,3 @@ public struct LightStateDiffSimplified {
         self.diff = LightStateDiff(changes: changes, currentStates: currentStates)
     }
 }
-
-extension LightStateDiff {
-    public var simplified: LightStateDiffSimplified {
-        LightStateDiffSimplified(self)
-    }
-}
