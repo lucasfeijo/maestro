@@ -98,7 +98,7 @@ while idx < args.count {
 }
 
 let api = HTTPHomeAssistantClient(baseURL: baseURL, token: token)
-let lights: LightController = simulate ? LoggingLightController() : api
+let lights: LightController = simulate ? LoggingLightController() : HomeAssistantLightController(baseURL: baseURL, token: token)
 let program: LightProgram
 switch programName.lowercased() {
 case LightProgramSecondary().name:

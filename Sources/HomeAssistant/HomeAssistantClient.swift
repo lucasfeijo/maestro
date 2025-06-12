@@ -3,18 +3,13 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public protocol HomeAssistantAPI {
+public protocol HomeAssistantStateProvider {
     func fetchAllStates() -> Result<HomeAssistantStateMap, Error>
-}
-
-/// Sends commands to change light states.
-public protocol LightController {
-    func setLightState(state: LightState)
 }
 
 /// Simple HTTP based implementation used by the server. It expects Home Assistant
 /// to expose a REST API accessible at `baseURL`.
-public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
+public final class HTTPHomeAssistantClient: HomeAssistantStateProvider {
     private let baseURL: URL
     private let session: URLSession
     private let token: String?
@@ -52,24 +47,4 @@ public final class HTTPHomeAssistantClient: HomeAssistantAPI, LightController {
         return box.value
     }
 
-    public func setLightState(state: LightState) {
-        let url = baseURL.appendingPathComponent("api/services/light/turn_\(state.on ? "on" : "off")")
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        if let token {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        var body: [String: Any] = ["entity_id": state.entityId]
-        if let b = state.brightness { body["brightness_pct"] = b }
-        if let ct = state.colorTemperature { body["color_temp"] = ct }
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
-        let semaphore = DispatchSemaphore(value: 0)
-        let task = session.dataTask(with: request) { _, _, _ in
-            semaphore.signal()
-        }
-        task.resume()
-        _ = semaphore.wait(timeout: .now() + 5)
-    }
 }
