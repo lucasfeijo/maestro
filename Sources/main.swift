@@ -106,5 +106,5 @@ case LightProgramSecondary().name:
 default:
     program = LightProgramDefault()
 }
-let maestro = Maestro(api: api, lights: lights, differ: program)
+let maestro = Maestro(api: api, lights: lights, program: program)
 try startServer(on: 8080, maestro: maestro)
