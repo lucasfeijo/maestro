@@ -97,7 +97,7 @@ while idx < args.count {
     idx += 1
 }
 
-let api = HomeAssistantStateProvider(baseURL: baseURL, token: token)
+let states = HomeAssistantStateProvider(baseURL: baseURL, token: token)
 let lights: LightController = simulate ? LoggingLightController() : HomeAssistantLightController(baseURL: baseURL, token: token)
 let program: LightProgram
 switch programName.lowercased() {
@@ -106,5 +106,5 @@ case LightProgramSecondary().name:
 default:
     program = LightProgramDefault()
 }
-let maestro = Maestro(api: api, lights: lights, program: program)
+let maestro = Maestro(states: states, lights: lights, program: program)
 try startServer(on: 8080, maestro: maestro)

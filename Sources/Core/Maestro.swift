@@ -1,12 +1,12 @@
 import Foundation
 
 public final class Maestro {
-    private let api: StateProvider
+    private let states: StateProvider
     private let lights: LightController
     private let program: LightProgram
 
-    public init(api: StateProvider, lights: LightController, program: LightProgram) {
-        self.api = api
+    public init(states: StateProvider, lights: LightController, program: LightProgram) {
+        self.states = states
         self.lights = lights
         self.program = program
     }
@@ -22,7 +22,7 @@ public final class Maestro {
     ///
     /// If any step fails, the error is logged and the process stops.
     public func run() {
-        let result = api.fetchAllStates()
+        let result = states.fetchAllStates()
         switch result {
         case .success(let states):
             let context = StateContext(states: states)

@@ -3,26 +3,6 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public typealias HomeAssistantStateResponse = [[String: Any]]
-
-public typealias HomeAssistantStateMap = [String: [String: Any]]
-
-extension HomeAssistantStateResponse {
-    public func toMap() -> HomeAssistantStateMap {
-        reduce(into: [:]) { map, state in
-            if let id = state["entity_id"] as? String {
-                map[id] = state
-            }
-        }
-    }
-}
-
-public protocol StateProvider {
-    func fetchAllStates() -> Result<HomeAssistantStateMap, Error>
-}
-
-/// Simple HTTP based implementation used by the server. It expects Home Assistant
-/// to expose a REST API accessible at `baseURL`.
 public final class HomeAssistantStateProvider: StateProvider {
     private let baseURL: URL
     private let session: URLSession
@@ -60,5 +40,4 @@ public final class HomeAssistantStateProvider: StateProvider {
         _ = semaphore.wait(timeout: .now() + 10)
         return box.value
     }
-
 }

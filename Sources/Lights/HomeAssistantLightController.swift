@@ -3,12 +3,6 @@ import Foundation
 import FoundationNetworking
 #endif
 
-/// Sends commands to change light states.
-public protocol LightController {
-    func setLightState(state: LightState)
-}
-
-/// HTTP-based implementation that communicates with Home Assistant.
 public final class HomeAssistantLightController: LightController {
     private let baseURL: URL
     private let token: String?
