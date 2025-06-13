@@ -1,0 +1,1 @@
+See /docs but specially /docs/guidelines.md
