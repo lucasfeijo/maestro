@@ -22,7 +22,12 @@ public struct LightStateChangeset {
                 } else if let desired = change.brightness,
                           let attrs = current["attributes"] as? [String: Any],
                           let curr = attrs["brightness"] as? Int {
-                    let pct = Int(round(Double(curr) * 100.0 / 255.0))
+                    let pct: Int
+                    if curr <= 100 {
+                        pct = curr
+                    } else {
+                        pct = Int(round(Double(curr) * 100.0 / 255.0))
+                    }
                     if pct != desired { shouldSend = true }
                 } else if change.brightness != nil {
                     shouldSend = true
