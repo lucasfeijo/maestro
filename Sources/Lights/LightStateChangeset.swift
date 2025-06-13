@@ -57,6 +57,14 @@ public struct LightStateChangeset {
                     }
                 } else if change.rgbwColor != nil {
                     shouldSend = true
+                } else if let desiredEffect = change.effect,
+                          let attrs = current["attributes"] as? [String: Any],
+                          let curr = attrs["effect"] as? String {
+                    if curr.lowercased() != desiredEffect.lowercased() {
+                        shouldSend = true
+                    }
+                } else if change.effect != nil {
+                    shouldSend = true
                 }
                 if !shouldSend { continue }
             }

@@ -78,6 +78,10 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 - Extend `LightState` to support `effect` values
 - Update `LightStateChangeset` to compare effect values
 - Modify light controller implementations accordingly
+- In the original Python automation, WLED strips were always sent
+  `effect: "solid"` whenever turned on. Without this, the lights might resume
+  whatever dynamic effect was previously active. The comparison should ignore
+  case so `"Solid"` and `"solid"` are treated the same.
 
 ### 7. Nested Group Updates
 - Implement recursive group handling similar to `process_light_group`

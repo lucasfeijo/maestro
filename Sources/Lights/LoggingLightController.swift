@@ -15,6 +15,7 @@ public final class LoggingLightController: LightController {
         if let rgbw = state.rgbwColor {
             message += " rgbw:(\(rgbw.0),\(rgbw.1),\(rgbw.2),\(rgbw.3))"
         }
+        if let effect = state.effect { message += " effect:\(effect)" }
         if let t = state.transitionDuration { message += " transition:\(t)" }
         print(message)
     }

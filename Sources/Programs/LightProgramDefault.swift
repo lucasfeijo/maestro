@@ -32,22 +32,22 @@ public struct LightProgramDefault: LightProgram {
 
         case .calmNight:
             if environment.timeOfDay == .daytime || environment.timeOfDay == .preSunset {
-                changes.on("light.kitchen_led", brightness: 50)
+                changes.on("light.kitchen_led", brightness: 50, effect: "solid")
                 changes.on("light.tripod_lamp", brightness: 10, colorTemperature: 200)
             } else {
                 if !environment.hyperionRunning {
-                    changes.on("light.tv_shelf_group", brightness: 2)
+                    changes.on("light.tv_shelf_group", brightness: 2, effect: "solid")
                 } else {
                     changes.off("light.tv_shelf_group")
                 }
-                changes.on("light.window_led_strip", brightness: 17)
+                changes.on("light.window_led_strip", brightness: 17, effect: "solid")
                 changes.on(["light.entrance_dining_light", "light.living_entry_door_light", "light.living_fireplace_spot"], brightness: 10)
                 changes.on("light.desk_light", brightness: 5)
                 changes.off(["light.shoes_light", "light.tv_light", "light.chaise_light", "light.corredor_door_light"])
                 changes.on("light.tripod_lamp", brightness: 10)
                 changes.on("light.zigbee_hub_estante_lights", brightness: 8)
                 changes.on("light.living_art_wall_light", brightness: 10)
-                changes.on("light.kitchen_led", brightness: 50)
+                changes.on("light.kitchen_led", brightness: 50, effect: "solid")
                 if environment.diningPresence {
                     changes.on("light.dining_table_light", brightness: 30)
                 } else {
@@ -59,7 +59,7 @@ public struct LightProgramDefault: LightProgram {
             if environment.timeOfDay == .daytime || environment.timeOfDay == .preSunset {
                 if !environment.hyperionRunning {
                     changes.on("light.tv_light", brightness: 50)
-                    changes.on("light.wled_tv_shelf_4", brightness: 20)
+                    changes.on("light.wled_tv_shelf_4", brightness: 20, effect: "solid")
                 } else {
                     changes.off(["light.tv_light", "light.tv_shelf_group"])
                 }
@@ -72,40 +72,40 @@ public struct LightProgramDefault: LightProgram {
                 changes.on("light.living_art_wall_light", brightness: 60)
                 changes.on("light.tripod_lamp", brightness: 49)
                 changes.off("light.living_fireplace_spot")
-                changes.on("light.zigbee_hub_estante_lights", brightness: 55)
-                changes.on("light.kitchen_led", brightness: 50)
+                    changes.on("light.zigbee_hub_estante_lights", brightness: 55)
+                    changes.on("light.kitchen_led", brightness: 50, effect: "solid")
             } else {
                 if !environment.hyperionRunning {
                     changes.on("light.tv_light", brightness: 51)
-                    changes.on("light.tv_shelf_group", brightness: 20)
+                    changes.on("light.tv_shelf_group", brightness: 20, effect: "solid")
                 } else {
                     changes.off("light.tv_light")
                 }
                 changes.on("light.color_lights_without_tv_light", brightness: 51)
                 changes.on("light.corner_light", brightness: 30)
-                changes.on("light.window_led_strip", brightness: 40)
+                changes.on("light.window_led_strip", brightness: 40, effect: "solid")
                 changes.on(["light.living_fireplace_spot", "light.living_entry_door_light", "light.shoes_light", "light.entrance_dining_light", "light.corredor_door_light"], brightness: 20)
                 changes.off("light.chaise_light")
-                changes.on("light.kitchen_led", brightness: 26)
+                changes.on("light.kitchen_led", brightness: 26, effect: "solid")
             }
 
         case .bright:
             if !environment.hyperionRunning {
                 changes.on("light.tv_light", brightness: 75)
-                changes.on("light.tv_shelf_group", brightness: 100)
+                changes.on("light.tv_shelf_group", brightness: 100, effect: "solid")
             } else {
                 changes.off(["light.tv_light", "light.tv_shelf_group"])
             }
             changes.on("light.living_temperature_lights", brightness: 60)
             changes.on("light.color_lights_without_tv_light", brightness: 75)
-            changes.on("light.window_led_strip", brightness: 100)
+            changes.on("light.window_led_strip", brightness: 100, effect: "solid")
             changes.on("light.zigbee_hub_estante_lights", brightness: 75)
-            changes.on("light.kitchen_led", brightness: 100)
+            changes.on("light.kitchen_led", brightness: 100, effect: "solid")
 
         case .brightest:
             if !environment.hyperionRunning {
                 changes.on("light.tv_light", brightness: 100)
-                changes.on("light.tv_shelf_group", brightness: 100)
+                changes.on("light.tv_shelf_group", brightness: 100, effect: "solid")
             } else {
                 changes.off(["light.tv_light", "light.tv_shelf_group"])
             }
@@ -134,10 +134,10 @@ public struct LightProgramDefault: LightProgram {
             } else {
                 kitchenOnBrightness = 100
             }
-            changes.on("light.kitchen_sink_light", brightness: kitchenOnBrightness, rgbwColor: sinkColor)
+            changes.on("light.kitchen_sink_light", brightness: kitchenOnBrightness, rgbwColor: sinkColor, effect: "solid")
             changes.on("light.kitchen_sink_light_old", brightness: 20)
         } else if scene != .off {
-            changes.on("light.kitchen_sink_light", brightness: 10, rgbwColor: sinkColor)
+            changes.on("light.kitchen_sink_light", brightness: 10, rgbwColor: sinkColor, effect: "solid")
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
     }
@@ -155,6 +155,7 @@ public struct LightProgramDefault: LightProgram {
                                                   on: state.on,
                                                   brightness: state.brightness,
                                                   colorTemperature: state.colorTemperature,
+                                                  effect: state.effect,
                                                   transitionDuration: transition))
                     } else {
                         expanded.append(LightState(entityId: id,
@@ -187,6 +188,7 @@ public struct LightProgramDefault: LightProgram {
                               colorTemperature: state.colorTemperature,
                               rgbColor: state.rgbColor,
                               rgbwColor: state.rgbwColor,
+                              effect: state.effect,
                               transitionDuration: transition)
         }
     }

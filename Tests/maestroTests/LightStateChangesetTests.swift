@@ -52,4 +52,20 @@ final class LightStateChangesetTests: XCTestCase {
         ).simplified
         XCTAssertTrue(simplified.isEmpty)
     }
+
+    func testSimplifiedIncludesEffectChanges() {
+        let simplified = LightStateChangeset(
+            currentStates: ["light.effect_light": ["state": "on", "attributes": ["effect": "blink"]]],
+            desiredStates: [LightState(entityId: "light.effect_light", on: true, effect: "solid")]
+        ).simplified
+        XCTAssertEqual(simplified.first?.effect, "solid")
+    }
+
+    func testSimplifiedFiltersUnchangedEffectsCaseInsensitive() {
+        let simplified = LightStateChangeset(
+            currentStates: ["light.effect_light": ["state": "on", "attributes": ["effect": "Solid"]]],
+            desiredStates: [LightState(entityId: "light.effect_light", on: true, effect: "solid")]
+        ).simplified
+        XCTAssertTrue(simplified.isEmpty)
+    }
 }
