@@ -8,7 +8,16 @@ let package = Package(
     targets: [
         // Executable containing the HTTP server and orchestration logic.
         .executableTarget(
-            name: "maestro"),
+            name: "maestro",
+            path: ".",
+            exclude: [
+                "Examples",
+                "Tests",
+                "docs",
+                "Package.swift",
+                "README.md"
+            ]
+        ),
         // Unit tests exercising the orchestration logic.
         .testTarget(
             name: "maestroTests",

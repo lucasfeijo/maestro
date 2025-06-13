@@ -1,0 +1,37 @@
+import Foundation
+
+struct MaestroOptions {
+    var baseURL: URL = URL(string: "http://homeassistant.local:8123/")!
+    var token: String? = nil
+    var simulate: Bool = false
+    var programName: String = "default"
+}
+
+func parseArguments(_ args: [String]) -> MaestroOptions {
+    var options = MaestroOptions()
+    var idx = 1
+    while idx < args.count {
+        let arg = args[idx]
+        if arg.hasPrefix("--baseurl=") {
+            let value = String(arg.dropFirst("--baseurl=".count))
+            if let url = URL(string: value) { options.baseURL = url }
+        } else if arg == "--baseurl", idx + 1 < args.count {
+            idx += 1
+            if let url = URL(string: args[idx]) { options.baseURL = url }
+        } else if arg.hasPrefix("--token=") {
+            options.token = String(arg.dropFirst("--token=".count))
+        } else if arg == "--token", idx + 1 < args.count {
+            idx += 1
+            options.token = args[idx]
+        } else if arg == "--simulate" {
+            options.simulate = true
+        } else if arg.hasPrefix("--program=") {
+            options.programName = String(arg.dropFirst("--program=".count))
+        } else if arg == "--program", idx + 1 < args.count {
+            idx += 1
+            options.programName = args[idx]
+        }
+        idx += 1
+    }
+    return options
+}
