@@ -4,10 +4,10 @@ This document outlines a high-level plan for packaging and running the `maestro`
 
 ## 1. Add-on directory structure
 
-Create a `maestro` directory in this repository with the following files:
+Create a `docker` directory in this repository with the following files:
 
 ```
-maestro/
+docker/
 ├── Dockerfile
 ├── run.sh
 └── config.yaml
@@ -64,7 +64,7 @@ The add-on manifest defines the image, startup behavior and option schema. Examp
 
 ```yaml
 name: Maestro
-version: "0.1.2"
+version: "0.1.3"
 slug: maestro
 description: Home Assistant lights orchestrator
 startup: application
@@ -112,7 +112,7 @@ Home Assistant uses this file when adding the repository URL to the Add-on Store
 For local testing without Home Assistant you can build the Docker image directly:
 
 ```bash
-docker build -t maestro-addon ./maestro
+docker build -t maestro-addon ./docker
 docker run --rm -e BASEURL=http://hass.local:8123/ -e TOKEN=YOUR_TOKEN maestro-addon
 ```
 
