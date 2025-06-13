@@ -9,6 +9,10 @@ public struct LightProgramDefault: LightProgram {
         let environment = context.environment
         let states = context.states
 
+        guard environment.autoMode else {
+            return LightStateChangeset(currentStates: states, desiredStates: [])
+        }
+
         var changes: [LightState] = []
 
         switch scene {

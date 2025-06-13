@@ -4,9 +4,9 @@ The original Home Assistant Python automation includes a variety of capabilities
 
 ## Quick Wins (Low Complexity)
 
-### 1. Auto Mode Toggle
+### 1. Auto Mode Toggle *(implemented)*
 - Add support for `input_boolean.living_scene_auto` to freeze all changes when auto=off
-- Simple boolean check that can be added to the program flow
+- Simple boolean check added to the program flow
 - No complex state management required
 
 ### 2. Error Reporting and Logging
