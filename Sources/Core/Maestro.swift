@@ -32,13 +32,9 @@ public final class Maestro {
         case .success(let states):
             let context = StateContext(states: states)
             let output = program.compute(context: context)
-            var effects = output.sideEffects
-            for newLightState in output.changeset.simplified {
-                effects.append(.setLight(newLightState))
-            }
-            for effect in effects {
-                effect.perform(using: lights)
-            }
+            let lightEffects = output.changeset.simplified.map { SideEffect.setLight($0) }
+            let allEffects = output.sideEffects + lightEffects
+            allEffects.forEach { $0.perform(using: lights) }
         case .failure(let error):
             logger.error("Failed to fetch home assistant states: \(error)")
         }
