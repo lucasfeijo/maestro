@@ -1,0 +1,21 @@
+name: Maestro
+version: "0.1.2"
+slug: maestro
+description: Home Assistant lights orchestrator
+startup: application
+boot: auto
+build_from:
+  amd64: ghcr.io/home-assistant/amd64-addon-base:latest
+options:
+  baseurl: http://homeassistant.local:8123/
+  token: ''
+  simulate: false
+  no_notify: false
+  program: default
+schema:
+  baseurl: str?
+  token: str?
+  simulate: bool
+  no_notify: bool
+  program: str?
+image: local/maestro

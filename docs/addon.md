@@ -10,12 +10,12 @@ Create a `maestro` directory in this repository with the following files:
 maestro/
 ├── Dockerfile
 ├── run.sh
-└── config.json
+└── config.yaml
 ```
 
 - **Dockerfile** – builds the Swift project and defines the container runtime.
 - **run.sh** – entrypoint script that starts `maestro` using options supplied by the user.
-- **config.json** – Home Assistant add-on manifest with option schema.
+- **config.yaml** – Home Assistant add-on manifest with option schema.
 
 Home Assistant expects this structure when cloning the repository as an add-on source.
 
@@ -58,58 +58,51 @@ exec /usr/local/bin/maestro "${ARGS[@]}"
 
 The environment variables (`BASEURL`, `TOKEN`, etc.) are injected by Home Assistant based on user configuration options.
 
-## 4. config.json
+## 4. config.yaml
 
 The add-on manifest defines the image, startup behavior and option schema. Example:
 
-```json
-{
-  "name": "Maestro",
-  "version": "0.1.1",
-  "slug": "maestro",
-  "description": "Home Assistant lights orchestrator",
-  "startup": "application",
-  "boot": "auto",
-  "build_from": {
-    "amd64": "ghcr.io/home-assistant/amd64-addon-base:latest"
-  },
-  "options": {
-    "baseurl": "http://homeassistant.local:8123/",
-    "token": "",
-    "simulate": false,
-    "no_notify": false,
-    "program": "default"
-  },
-  "schema": {
-    "baseurl": "str?",
-    "token": "str?",
-    "simulate": "bool",
-    "no_notify": "bool",
-    "program": "str?"
-  },
-  "image": "local/maestro"
-}
+```yaml
+name: Maestro
+version: "0.1.2"
+slug: maestro
+description: Home Assistant lights orchestrator
+startup: application
+boot: auto
+build_from:
+  amd64: ghcr.io/home-assistant/amd64-addon-base:latest
+options:
+  baseurl: http://homeassistant.local:8123/
+  token: ''
+  simulate: false
+  no_notify: false
+  program: default
+schema:
+  baseurl: str?
+  token: str?
+  simulate: bool
+  no_notify: bool
+  program: str?
+image: local/maestro
 ```
 
 Users can adjust the options in the Home Assistant UI. They are exported as environment variables with the same names in uppercase.
 
 ## 5. Repository configuration
 
-To distribute the add-on, include a `repository.json` at the repository root:
+To distribute the add-on, include a `repository.yaml` at the repository root:
 
-```json
-{
-  "name": "Maestro Add-ons",
-  "url": "https://github.com/lucasfeijo/maestro",
-  "maintainer": "lucasfeijo"
-}
+```yaml
+name: Maestro Add-on
+url: https://github.com/lucasfeijo/maestro
+maintainer: lucasfeijo
 ```
 
 Home Assistant uses this file when adding the repository URL to the Add-on Store.
 
 ## 6. Installing the add-on
 
-1. Push the repository (including the new `maestro` directory and `repository.json`) to GitHub or another git host.
+1. Push the repository (including the new `maestro` directory and `repository.yaml`) to GitHub or another git host.
 2. In Home Assistant, navigate to **Settings → Add-ons → Add-on Store → Repositories** and add the repository URL.
 3. The "Maestro" add-on will appear in the store. Install it and configure the options (base URL, token, etc.).
 4. Start the add-on. Home Assistant will pull/build the Docker image and run `maestro` inside the container.
@@ -128,6 +121,6 @@ This mimics the environment that Home Assistant provides when running the add-on
 ## 8. Future considerations
 
 - Automate releases by pushing versioned Docker images to a registry.
-- Extend `config.json` with more options as new command line arguments are added to `maestro`.
+- Extend `config.yaml` with more options as new command line arguments are added to `maestro`.
 - Write documentation in the main README referencing this add-on guide.
 
