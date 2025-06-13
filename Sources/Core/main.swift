@@ -97,7 +97,7 @@ while idx < args.count {
     idx += 1
 }
 
-let api = HTTPHomeAssistantClient(baseURL: baseURL, token: token)
+let api = HomeAssistantStateProvider(baseURL: baseURL, token: token)
 let lights: LightController = simulate ? LoggingLightController() : HomeAssistantLightController(baseURL: baseURL, token: token)
 let program: LightProgram
 switch programName.lowercased() {
