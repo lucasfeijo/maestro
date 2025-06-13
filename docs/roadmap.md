@@ -1,46 +1,76 @@
 # Maestro Feature Roadmap
 
-The original Home Assistant Python automation includes a variety of capabilities that are not yet represented in the Swift implementation. The items below describe functionality still missing from **maestro** that could be implemented in future versions.
+The original Home Assistant Python automation includes a variety of capabilities that are not yet represented in the Swift implementation. Below is a prioritized list of features to implement in future versions.
 
-## Missing Functional Areas
+## Quick Wins (Low Complexity)
 
-- **Light colors and effects**
-  - The Python script sets `rgb_color`, `rgbw_color` and `effect` values for many lights. `LightState` currently only models brightness and color temperature【F:Sources/Lights/LightState.swift†L1-L12】.
-  - The changeset logic also only compares brightness when deciding whether to send an update【F:Sources/Lights/LightStateChangeset.swift†L15-L37】.
+### 1. Auto Mode Toggle
+- Add support for `input_boolean.living_scene_auto` to freeze all changes when auto=off
+- Simple boolean check that can be added to the program flow
+- No complex state management required
 
-- **Transition support**
-  - Several actions in the script specify transition times (e.g. 2 second fades). `LightState` and the light controller do not handle transition durations at the moment.
+### 2. Error Reporting and Logging
+- Implement structured logging for failures
+- Add support for Home Assistant persistent notifications
+- Create a `NotificationPusher` protocol for server notifications
+- Add command-line option to disable notifications
 
-- **Advanced time‑of‑day handling**
-  - The Python automation derives `daytime`, `pre_sunset`, `sunset` and `nighttime` using the sun's next setting time. `StateContext` currently collapses this into just `daytime` or `nighttime` based on `sun.sun` state【F:Sources/Context/StateContext.swift†L31-L33】, leaving the additional cases unused.
+## Medium Complexity
 
-- **Per‑shelf TV light control**
-  - The script checks each `input_boolean.wled_tv_shelf_n` to decide whether individual shelf segments should be on or off. Maestro currently treats `light.tv_shelf_group` as a single entity without per‑shelf adjustments.
+### 3. Transition Support
+- Add transition duration field to `LightState`
+- Update `LightController` implementations to handle transitions
+- Implement 2-second fade support for relevant actions
 
-- **Nested group updates**
-  - Functions like `process_light_group` and `update_specific_light` recursively apply updates to groups of lights. The current Swift code operates on explicit entity lists only.
+### 4. Advanced Time-of-Day Handling
+- Extend `StateContext` to support additional states:
+  - `daytime`
+  - `pre_sunset`
+  - `sunset`
+  - `nighttime`
+- Implement sun-based time detection logic
 
-- **Preset/dynamic scenes**
-  - When the `preset` scene is selected the Python version interacts with `scene_presets` and stops dynamic scenes. Maestro's `LightProgramDefault` leaves the `preset` case empty【F:Sources/Programs/LightProgramDefault.swift†L97-L101】.
+### 5. Per-Shelf TV Light Control
+- Add support for individual shelf control via `input_boolean.wled_tv_shelf_n`
+- Update `light.tv_shelf_group` handling to support per-shelf adjustments
+- Implement shelf-specific state management
 
-- **Presence‑based behavior for the kitchen sink**
-  - The script adjusts brightness and RGBW color of the kitchen sink lights based on both `kitchen_espresence` and `kitchen_presence_occupancy` sensors and resets the `kitchen_extra_brightness` helper when nobody is present. Maestro only monitors one presence sensor and does not change the helper state.
+## High Complexity
 
-- **Auto mode toggle**
-  - The Python automation honors `input_boolean.living_scene_auto` to freeze all changes when auto=off. This toggle is not considered by the Swift program.
+### 6. Light Colors and Effects
+- Extend `LightState` to support:
+  - `rgb_color`
+  - `rgbw_color`
+  - `effect` values
+- Update `LightStateChangeset` to compare color and effect values
+- Modify light controller implementations accordingly
 
-- **Error reporting and detailed logging**
-  - The existing script records skipped updates and sends persistent notifications on errors. Maestro currently just prints failures without structured logging or Home Assistant notifications.
-  - We would need another protocol like NotificationPusher that sends a request to the server to push a notification.
-  - There should also be a way to disable these notifications via cmd line args.
+### 7. Nested Group Updates
+- Implement recursive group handling similar to `process_light_group`
+- Add support for `update_specific_light` functionality
+- Create helper functions for group operations
 
-## Suggested Next Steps
+### 8. Preset/Dynamic Scenes
+- Implement `preset` scene handling in `LightProgramDefault`
+- Add support for `scene_presets` interaction
+- Implement dynamic scene stopping logic
 
-1. Extend `LightState` to include color, effect and transition fields, updating `LightController` implementations accordingly.
-2. Implement more granular time‑of‑day detection within `StateContext`.
-3. Add logic for per‑shelf control of `light.tv_shelf_group` using the shelf input booleans.
-4. Introduce support for nested groups and helper functions similar to `process_light_group`.
-5. Flesh out the `preset` scene handling and dynamic scene interactions.
-6. Expand presence handling and automation toggles to match the Python behavior.
-7. Provide better error reporting and logging, optionally via Home Assistant persistent notifications.
+### 9. Presence-Based Kitchen Sink Behavior
+- Add support for multiple presence sensors:
+  - `kitchen_espresence`
+  - `kitchen_presence_occupancy`
+- Implement brightness and RGBW color adjustments
+- Add `kitchen_extra_brightness` helper state management
+
+## Implementation Strategy
+
+1. Start with Quick Wins to build momentum and improve usability
+2. Move to Medium Complexity items to enhance core functionality
+3. Tackle High Complexity items last, as they require more architectural changes
+
+Each feature should be implemented with:
+- Comprehensive testing
+- Documentation updates
+- Backward compatibility where possible
+- Performance considerations
 
