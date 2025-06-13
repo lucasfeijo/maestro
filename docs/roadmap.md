@@ -12,7 +12,7 @@ The original Home Assistant Python automation includes a variety of capabilities
 ### 2. Error Reporting and Logging
 - Implement structured logging for failures
 - Add support for Home Assistant persistent notifications
-- Create a `NotificationPusher` protocol for server notifications
+- Create a `NotificationPusher` protocol for sending notifications to hass
 - Add command-line option to disable notifications
 
 ## Medium Complexity
