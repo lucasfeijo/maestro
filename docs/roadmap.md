@@ -31,6 +31,8 @@ The original Home Assistant Python automation includes a variety of capabilities
 
 - **Error reporting and detailed logging**
   - The existing script records skipped updates and sends persistent notifications on errors. Maestro currently just prints failures without structured logging or Home Assistant notifications.
+  - We would need another protocol like NotificationPusher that sends a request to the server to push a notification.
+  - There should also be a way to disable these notifications via cmd line args.
 
 ## Suggested Next Steps
 
