@@ -27,7 +27,7 @@ The original Home Assistant Python automation includes a variety of capabilities
   - The script adjusts brightness and RGBW color of the kitchen sink lights based on both `kitchen_espresence` and `kitchen_presence_occupancy` sensors and resets the `kitchen_extra_brightness` helper when nobody is present. Maestro only monitors one presence sensor and does not change the helper state.
 
 - **Auto mode toggle**
-  - The Python automation honors `input_boolean.living_scene_auto` to disable certain groups entirely. This toggle is not considered by the Swift program.
+  - The Python automation honors `input_boolean.living_scene_auto` to freeze all changes when auto=off. This toggle is not considered by the Swift program.
 
 - **Error reporting and detailed logging**
   - The existing script records skipped updates and sends persistent notifications on errors. Maestro currently just prints failures without structured logging or Home Assistant notifications.
