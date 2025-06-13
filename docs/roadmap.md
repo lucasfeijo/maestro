@@ -67,7 +67,7 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 
 ## High Complexity
 
-### 6.1. Light Colors
+### 6.1. Light Colors (implemented)
 - Extend `LightState` to support:
   - `rgb_color`
   - `rgbw_color`
