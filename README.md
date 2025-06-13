@@ -68,3 +68,6 @@ This pipeline runs each time the `/run` endpoint is called, ensuring the lights 
 
 All light changes use a smooth 2-second transition for a more pleasant fade.
 
+The light controller now supports `rgb_color` and `rgbw_color` fields so you can
+set full RGB(W) colors from your lighting programs.
+
