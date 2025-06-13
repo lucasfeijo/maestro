@@ -74,7 +74,7 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 - Update `LightStateChangeset` to compare color values
 - Modify light controller implementations accordingly
 
-### 6.2. Effects
+### 6.2. Effects (implemented)
 - Extend `LightState` to support `effect` values
 - Update `LightStateChangeset` to compare effect values
 - Modify light controller implementations accordingly
@@ -99,6 +99,8 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
   - `kitchen_presence_occupancy`
 - Implement brightness and RGBW color adjustments
 - Add `kitchen_extra_brightness` helper state management
+
+### 10. Side effects that require service calls that aren't light controls are cluttering maestro.swift, we need a structured way of collecting the side effects from the program step and performing them later in the light step (maybe rename light step?)
 
 ## Implementation Strategy
 
