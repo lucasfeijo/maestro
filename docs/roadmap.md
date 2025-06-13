@@ -60,7 +60,7 @@ Summary
 
 Feature 4 of the roadmap calls for more refined time-of-day logic within the Swift project. The existing Python script already performs sun-based checks that produce four discrete periods—daytime, pre_sunset, sunset, and nighttime—using offsets from the sun’s next setting time. Lighting scenes are then tailored based on these periods. To match this behavior, the Swift StateContext should be extended so that it generates similar TimeOfDay values and exposes them to the rest of the program, enabling transitions and scene choices that mirror the automation logic of python_script.py.
 
-### 5. Per-Shelf TV Light Control
+### 5. Per-Shelf TV Light Control *(implemented)*
 - Add support for individual shelf control via `input_boolean.wled_tv_shelf_n`
 - Update `light.tv_shelf_group` handling to support per-shelf adjustments
 - Implement shelf-specific state management

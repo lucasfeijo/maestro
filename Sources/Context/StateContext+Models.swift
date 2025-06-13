@@ -14,19 +14,23 @@ extension StateContext {
         public var kitchenPresence: Bool
         public var kitchenExtraBrightness: Bool
         public var autoMode: Bool
+        /// Individual shelf enable switches. Index 0 corresponds to shelf 1.
+        public var tvShelvesEnabled: [Bool]
 
         public init(timeOfDay: TimeOfDay,
                     hyperionRunning: Bool,
                     diningPresence: Bool,
                     kitchenPresence: Bool,
                     kitchenExtraBrightness: Bool,
-                    autoMode: Bool) {
+                    autoMode: Bool,
+                    tvShelvesEnabled: [Bool]) {
             self.timeOfDay = timeOfDay
             self.hyperionRunning = hyperionRunning
             self.diningPresence = diningPresence
             self.kitchenPresence = kitchenPresence
             self.kitchenExtraBrightness = kitchenExtraBrightness
             self.autoMode = autoMode
+            self.tvShelvesEnabled = tvShelvesEnabled
         }
     }
 }

@@ -61,12 +61,19 @@ public struct StateContext {
         let kitchenPresence = states["binary_sensor.kitchen_espresence"]?["state"] as? String == "on"
         let kitchenExtraBrightness = states["input_boolean.kitchen_extra_brightness"]?["state"] as? String == "on"
         let autoMode = states["input_boolean.living_scene_auto"]?["state"] as? String != "off"
+        var tvShelves: [Bool] = []
+        for i in 1...5 {
+            let key = "input_boolean.wled_tv_shelf_\(i)"
+            let enabled = states[key]?["state"] as? String != "off"
+            tvShelves.append(enabled)
+        }
         let env = Environment(timeOfDay: timeOfDay,
                             hyperionRunning: hyperionRunning,
                             diningPresence: diningPresence,
                             kitchenPresence: kitchenPresence,
                             kitchenExtraBrightness: kitchenExtraBrightness,
-                            autoMode: autoMode)
+                            autoMode: autoMode,
+                            tvShelvesEnabled: tvShelves)
 
         self.scene = scene
         self.environment = env
