@@ -19,3 +19,8 @@ schema:
   no_notify: bool
   program: str?
 image: local/maestro
+arch:
+  - amd64
+  - armhf
+  - aarch64
+  - i386
