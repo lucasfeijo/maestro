@@ -15,6 +15,7 @@ public struct LightStateChangeset {
     public var simplified: [LightState] {
         var simplified: [LightState] = []
         for change in desiredStates {
+
             if let current = currentStates[change.entityId],
                let state = current["state"] as? String {
                 var shouldSend = false
@@ -29,7 +30,7 @@ public struct LightStateChangeset {
                     } else {
                         pct = Int(round(Double(curr) * 100.0 / 255.0))
                     }
-                    if pct != desired { shouldSend = true }
+                    if abs(pct - desired) > 1 { shouldSend = true }
                 } else if change.brightness != nil {
                     shouldSend = true
                 }

@@ -115,6 +115,20 @@ public struct LightProgramDefault: LightProgram {
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
 
-        return LightStateChangeset(currentStates: states, desiredStates: changes)
+        let scaleStr = states["input_number.living_scene_brightness_percentage"]?["state"] as? String ?? "100"
+        let scalePct = Double(scaleStr) ?? 100
+        let scale = max(0.0, min(scalePct, 100.0)) / 100.0
+        let scaledChanges = changes.map { state -> LightState in
+            guard let b = state.brightness else { return state }
+            let scaled = Int(round(Double(b) * scale))
+            let clamped = max(1, min(100, scaled))
+            return LightState(entityId: state.entityId,
+                              on: state.on,
+                              brightness: clamped,
+                              colorTemperature: state.colorTemperature)
+        }
+
+        return LightStateChangeset(currentStates: states,
+                                   desiredStates: scaledChanges)
     }
 }
