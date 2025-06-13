@@ -27,4 +27,12 @@ final class LightStateChangesetTests: XCTestCase {
         let corner = simplified.first { $0.entityId == "light.corner_light" }
         XCTAssertEqual(corner?.on, false)
     }
+
+    func testSimplifiedIgnoresSmallBrightnessDifference() {
+        let simplified = LightStateChangeset(
+            currentStates: ["light.tv_light": ["state": "on", "attributes": ["brightness": 51]]],
+            desiredStates: [LightState(entityId: "light.tv_light", on: true, brightness: 50)]
+        ).simplified
+        XCTAssertTrue(simplified.isEmpty)
+    }
 }
