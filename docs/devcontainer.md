@@ -4,7 +4,7 @@ The add-on uses the official Home Assistant base image
 `ghcr.io/home-assistant/amd64-addon-base:latest` for both building and running.
 This keeps the environment identical to what Home Assistant expects.
 
-The `maestro/Dockerfile` installs the Swift compiler specified in `.swift-version`
+The `docker/Dockerfile` installs the Swift compiler specified in `.swift-version`
 and then builds the project:
 
 ```Dockerfile
@@ -22,6 +22,6 @@ When Home Assistant builds the add-on it pulls these images automatically. Local
 builds behave the same way:
 
 ```bash
-docker build -t maestro-addon ./maestro
+docker build -t maestro-addon ./docker
 docker run --rm maestro-addon
 ```
