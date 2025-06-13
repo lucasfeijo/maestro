@@ -3,13 +3,27 @@ import Foundation
 import FoundationNetworking
 #endif
 
-public protocol HomeAssistantStateProvider {
+public typealias HomeAssistantStateResponse = [[String: Any]]
+
+public typealias HomeAssistantStateMap = [String: [String: Any]]
+
+extension HomeAssistantStateResponse {
+    public func toMap() -> HomeAssistantStateMap {
+        reduce(into: [:]) { map, state in
+            if let id = state["entity_id"] as? String {
+                map[id] = state
+            }
+        }
+    }
+}
+
+public protocol StateProvider {
     func fetchAllStates() -> Result<HomeAssistantStateMap, Error>
 }
 
 /// Simple HTTP based implementation used by the server. It expects Home Assistant
 /// to expose a REST API accessible at `baseURL`.
-public final class HTTPHomeAssistantClient: HomeAssistantStateProvider {
+public final class HomeAssistantStateProvider: StateProvider {
     private let baseURL: URL
     private let session: URLSession
     private let token: String?
@@ -29,7 +43,7 @@ public final class HTTPHomeAssistantClient: HomeAssistantStateProvider {
         }
 
         let semaphore = DispatchSemaphore(value: 0)
-        final class Box: @unchecked Sendable { var value: Result<HomeAssistantStateMap, Error> = .failure(NSError(domain: "HomeAssistantClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch all states"])) }
+        final class Box: @unchecked Sendable { var value: Result<HomeAssistantStateMap, Error> = .failure(NSError(domain: "HomeAssistantStateProvider", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch all states"])) }
         let box = Box()
         let task = session.dataTask(with: request) { data, urlResponse, error in
             if let httpResponse = urlResponse as? HTTPURLResponse,
@@ -38,7 +52,7 @@ public final class HTTPHomeAssistantClient: HomeAssistantStateProvider {
                let json = try? JSONSerialization.jsonObject(with: data) as? HomeAssistantStateResponse {
                 box.value = .success(json.toMap())
             } else {
-                box.value = .failure(error ?? NSError(domain: "HomeAssistantClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch all states"]))
+                box.value = .failure(error ?? NSError(domain: "HomeAssistantStateProvider", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to fetch all states"]))
             }
             semaphore.signal()
         }
