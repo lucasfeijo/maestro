@@ -13,13 +13,20 @@ extension StateContext {
         public var diningPresence: Bool
         public var kitchenPresence: Bool
         public var kitchenExtraBrightness: Bool
+        public var autoMode: Bool
 
-        public init(timeOfDay: TimeOfDay, hyperionRunning: Bool, diningPresence: Bool, kitchenPresence: Bool, kitchenExtraBrightness: Bool) {
+        public init(timeOfDay: TimeOfDay,
+                    hyperionRunning: Bool,
+                    diningPresence: Bool,
+                    kitchenPresence: Bool,
+                    kitchenExtraBrightness: Bool,
+                    autoMode: Bool) {
             self.timeOfDay = timeOfDay
             self.hyperionRunning = hyperionRunning
             self.diningPresence = diningPresence
             self.kitchenPresence = kitchenPresence
             self.kitchenExtraBrightness = kitchenExtraBrightness
+            self.autoMode = autoMode
         }
-    }   
+    }
 }
