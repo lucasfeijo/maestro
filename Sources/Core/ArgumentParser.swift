@@ -5,6 +5,7 @@ struct MaestroOptions {
     var token: String? = nil
     var simulate: Bool = false
     var programName: String = "default"
+    var notificationsEnabled: Bool = true
 }
 
 func parseArguments(_ args: [String]) -> MaestroOptions {
@@ -30,6 +31,8 @@ func parseArguments(_ args: [String]) -> MaestroOptions {
         } else if arg == "--program", idx + 1 < args.count {
             idx += 1
             options.programName = args[idx]
+        } else if arg == "--no-notify" || arg == "--disable-notifications" {
+            options.notificationsEnabled = false
         }
         idx += 1
     }

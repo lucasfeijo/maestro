@@ -23,6 +23,7 @@ swift run maestro
  --baseurl http://homeassistant.local:8123/ # base URL for the Home Assistant instance. The default is `http://homeassistant.local:8123/`
  --token YOUR_TOKEN # long lived Home Assistant token used for API calls
  --simulate # print light commands to stdout instead of sending them
+ --no-notify # disable Home Assistant persistent notifications on failures
  --program secondary # choose the light program to run (`default` or `secondary`)
 ```
 

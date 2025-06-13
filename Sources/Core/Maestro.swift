@@ -4,11 +4,16 @@ public final class Maestro {
     private let states: StateProvider
     private let lights: LightController
     private let program: LightProgram
+    private let logger: Logger
 
-    public init(states: StateProvider, lights: LightController, program: LightProgram) {
+    public init(states: StateProvider,
+                lights: LightController,
+                program: LightProgram,
+                logger: Logger) {
         self.states = states
         self.lights = lights
         self.program = program
+        self.logger = logger
     }
 
     /// Fetches state from Home Assistant and applies the current scene.
@@ -31,7 +36,7 @@ public final class Maestro {
                 lights.setLightState(state: newLightState)
             }
         case .failure(let error):
-                print("Failed to fetch home assistant states: \(error)")
+            logger.error("Failed to fetch home assistant states: \(error)")
         }
     }
 }
