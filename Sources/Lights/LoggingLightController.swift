@@ -22,4 +22,8 @@ public final class LoggingLightController: LightController {
     public func stopAllDynamicScenes() {
         print("[LOG] scene_presets.stop_all_dynamic_scenes")
     }
+
+    public func setInputBoolean(entityId: String, to state: Bool) {
+        print("[LOG] \(entityId) -> \(state ? "on" : "off")")
+    }
 }

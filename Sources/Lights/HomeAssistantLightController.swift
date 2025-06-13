@@ -67,4 +67,29 @@ public final class HomeAssistantLightController: LightController {
         task.resume()
         _ = semaphore.wait(timeout: .now() + 5)
     }
+
+    public func setInputBoolean(entityId: String, to state: Bool) {
+        let action = state ? "turn_on" : "turn_off"
+        let url = baseURL.appendingPathComponent("api/services/input_boolean/\(action)")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpBody = try? JSONSerialization.data(withJSONObject: ["entity_id": entityId])
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let logger = self.logger
+        let task = session.dataTask(with: request) { _, response, error in
+            if let error {
+                logger?.error("Failed to set input_boolean for \(entityId): \(error)")
+            } else if let http = response as? HTTPURLResponse, http.statusCode >= 300 {
+                logger?.error("Failed to set input_boolean for \(entityId) - HTTP \(http.statusCode)")
+            }
+            semaphore.signal()
+        }
+        task.resume()
+        _ = semaphore.wait(timeout: .now() + 5)
+    }
 }

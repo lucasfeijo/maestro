@@ -31,6 +31,9 @@ public final class Maestro {
         switch result {
         case .success(let states):
             let context = StateContext(states: states)
+            if !context.environment.kitchenPresence {
+                lights.setInputBoolean(entityId: "input_boolean.kitchen_extra_brightness", to: false)
+            }
             if context.environment.autoMode && context.scene != .preset {
                 lights.stopAllDynamicScenes()
             }
