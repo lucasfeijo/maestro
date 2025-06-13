@@ -14,6 +14,16 @@ public struct LightProgramDefault: LightProgram {
             return LightStateChangeset(currentStates: states, desiredStates: [])
         }
 
+        var changes = sceneChanges(scene: scene, environment: environment)
+        applyKitchenSink(scene: scene, environment: environment, changes: &changes)
+        let expanded = expandTvShelfGroup(changes: changes, environment: environment, transition: transition)
+        let scaled = scaleBrightness(changes: expanded, states: states, transition: transition)
+
+        return LightStateChangeset(currentStates: states,
+                                   desiredStates: scaled)
+    }
+
+    private func sceneChanges(scene: StateContext.Scene, environment: StateContext.Environment) -> [LightState] {
         var changes: [LightState] = []
 
         switch scene {
@@ -105,7 +115,12 @@ public struct LightProgramDefault: LightProgram {
             break
         }
 
-        // Kitchen sink presence behavior
+        return changes
+    }
+
+    private func applyKitchenSink(scene: StateContext.Scene,
+                                  environment: StateContext.Environment,
+                                  changes: inout [LightState]) {
         let kitchenOnBrightness: Int
         if environment.kitchenPresence {
             if (scene == .calmNight || scene == .normal || scene == .off) && !environment.kitchenExtraBrightness {
@@ -119,11 +134,42 @@ public struct LightProgramDefault: LightProgram {
             changes.on("light.kitchen_sink_light", brightness: 10)
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
+    }
 
+    private func expandTvShelfGroup(changes: [LightState],
+                                    environment: StateContext.Environment,
+                                    transition: Double) -> [LightState] {
+        var expanded: [LightState] = []
+        for state in changes {
+            if state.entityId == "light.tv_shelf_group" {
+                for (idx, enabled) in environment.tvShelvesEnabled.enumerated() {
+                    let id = "light.wled_tv_shelf_\(idx + 1)"
+                    if enabled {
+                        expanded.append(LightState(entityId: id,
+                                                  on: state.on,
+                                                  brightness: state.brightness,
+                                                  colorTemperature: state.colorTemperature,
+                                                  transitionDuration: transition))
+                    } else {
+                        expanded.append(LightState(entityId: id,
+                                                  on: false,
+                                                  transitionDuration: transition))
+                    }
+                }
+            } else {
+                expanded.append(state)
+            }
+        }
+        return expanded
+    }
+
+    private func scaleBrightness(changes: [LightState],
+                                 states: HomeAssistantStateMap,
+                                 transition: Double) -> [LightState] {
         let scaleStr = states["input_number.living_scene_brightness_percentage"]?["state"] as? String ?? "100"
         let scalePct = Double(scaleStr) ?? 100
         let scale = max(0.0, min(scalePct, 100.0)) / 100.0
-        let scaledChanges = changes.map { state -> LightState in
+        return changes.map { state -> LightState in
             var brightness = state.brightness
             if let b = state.brightness {
                 let scaled = Int(round(Double(b) * scale))
@@ -135,8 +181,5 @@ public struct LightProgramDefault: LightProgram {
                               colorTemperature: state.colorTemperature,
                               transitionDuration: transition)
         }
-
-        return LightStateChangeset(currentStates: states,
-                                   desiredStates: scaledChanges)
     }
 }
