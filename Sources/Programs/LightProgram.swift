@@ -1,6 +1,7 @@
 import Foundation
 
 // PROGRAM:
+
 public struct ProgramOutput {
     public let changeset: LightStateChangeset
     public let sideEffects: [SideEffect]
