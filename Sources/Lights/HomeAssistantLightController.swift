@@ -7,11 +7,16 @@ public final class HomeAssistantLightController: LightController {
     private let baseURL: URL
     private let token: String?
     private let session: URLSession
+    private let logger: Logger?
 
-    public init(baseURL: URL, token: String? = nil, session: URLSession = .shared) {
+    public init(baseURL: URL,
+                token: String? = nil,
+                session: URLSession = .shared,
+                logger: Logger? = nil) {
         self.baseURL = baseURL
         self.token = token
         self.session = session
+        self.logger = logger
     }
 
     public func setLightState(state: LightState) {
@@ -28,7 +33,14 @@ public final class HomeAssistantLightController: LightController {
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let semaphore = DispatchSemaphore(value: 0)
-        let task = session.dataTask(with: request) { _, _, _ in
+        let logger = self.logger
+        let entityId = state.entityId
+        let task = session.dataTask(with: request) { _, response, error in
+            if let error {
+                logger?.error("Failed to set state for \(entityId): \(error)")
+            } else if let http = response as? HTTPURLResponse, http.statusCode >= 300 {
+                logger?.error("Failed to set state for \(entityId) - HTTP \(http.statusCode)")
+            }
             semaphore.signal()
         }
         task.resume()
