@@ -5,6 +5,7 @@ public struct LightState {
     public let colorTemperature: Int?
     public let rgbColor: (Int, Int, Int)?
     public let rgbwColor: (Int, Int, Int, Int)?
+    public let effect: String?
     /// Optional transition duration in seconds
     public let transitionDuration: Double?
 
@@ -14,6 +15,7 @@ public struct LightState {
                 colorTemperature: Int? = nil,
                 rgbColor: (Int, Int, Int)? = nil,
                 rgbwColor: (Int, Int, Int, Int)? = nil,
+                effect: String? = nil,
                 transitionDuration: Double? = nil) {
         self.entityId = entityId
         self.on = on
@@ -21,6 +23,7 @@ public struct LightState {
         self.colorTemperature = colorTemperature
         self.rgbColor = rgbColor
         self.rgbwColor = rgbwColor
+        self.effect = effect
         self.transitionDuration = transitionDuration
     }
 }
@@ -31,6 +34,7 @@ public extension Array where Element == LightState {
                      colorTemperature: Int? = nil,
                      rgbColor: (Int, Int, Int)? = nil,
                      rgbwColor: (Int, Int, Int, Int)? = nil,
+                     effect: String? = nil,
                      transitionDuration: Double? = nil) {
         append(LightState(entityId: entityId,
                           on: true,
@@ -38,6 +42,7 @@ public extension Array where Element == LightState {
                           colorTemperature: colorTemperature,
                           rgbColor: rgbColor,
                           rgbwColor: rgbwColor,
+                          effect: effect,
                           transitionDuration: transitionDuration))
     }
 
@@ -46,6 +51,7 @@ public extension Array where Element == LightState {
                      colorTemperature: Int? = nil,
                      rgbColor: (Int, Int, Int)? = nil,
                      rgbwColor: (Int, Int, Int, Int)? = nil,
+                     effect: String? = nil,
                      transitionDuration: Double? = nil) {
         for id in entityIds {
             on(id,
@@ -53,6 +59,7 @@ public extension Array where Element == LightState {
                colorTemperature: colorTemperature,
                rgbColor: rgbColor,
                rgbwColor: rgbwColor,
+               effect: effect,
                transitionDuration: transitionDuration)
         }
     }
