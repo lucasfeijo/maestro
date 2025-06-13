@@ -31,6 +31,9 @@ public final class Maestro {
         switch result {
         case .success(let states):
             let context = StateContext(states: states)
+            if context.environment.autoMode && context.scene != .preset {
+                lights.stopAllDynamicScenes()
+            }
             let stateSet = program.computeStateSet(context: context)
             for newLightState in stateSet.simplified {
                 lights.setLightState(state: newLightState)

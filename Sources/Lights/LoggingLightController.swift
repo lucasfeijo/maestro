@@ -18,4 +18,8 @@ public final class LoggingLightController: LightController {
         if let t = state.transitionDuration { message += " transition:\(t)" }
         print(message)
     }
+
+    public func stopAllDynamicScenes() {
+        print("[LOG] scene_presets.stop_all_dynamic_scenes")
+    }
 }

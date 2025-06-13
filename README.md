@@ -71,5 +71,9 @@ All light changes use a smooth 2-second transition for a more pleasant fade.
 The light controller now supports `rgb_color` and `rgbw_color` fields so you can
 set full RGB(W) colors from your lighting programs.
 
+### Preset scenes
+
+When the selected scene is `preset`, maestro only turns off the `light.living_temperature_lights` group and leaves other lights untouched. This allows the [scene_presets](https://github.com/Hypfer/hass-scene_presets) integration to run dynamic color scenes. Whenever a different scene is chosen, maestro sends a request to `scene_presets.stop_all_dynamic_scenes` to ensure any running dynamic scenes are stopped.
 
 For details on running maestro as a Home Assistant add-on, see [docs/addon.md](docs/addon.md).
+

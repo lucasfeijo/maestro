@@ -49,4 +49,22 @@ public final class HomeAssistantLightController: LightController {
         task.resume()
         _ = semaphore.wait(timeout: .now() + 5)
     }
+
+    public func stopAllDynamicScenes() {
+        let url = baseURL.appendingPathComponent("api/services/scene_presets/stop_all_dynamic_scenes")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+        request.httpBody = try? JSONSerialization.data(withJSONObject: [:])
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let task = session.dataTask(with: request) { _, _, _ in
+            semaphore.signal()
+        }
+        task.resume()
+        _ = semaphore.wait(timeout: .now() + 5)
+    }
 }

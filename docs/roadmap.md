@@ -84,7 +84,7 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 - Add support for `update_specific_light` functionality
 - Create helper functions for group operations
 
-### 8. Preset/Dynamic Scenes
+### 8. Preset/Dynamic Scenes *(implemented)*
 - Implement `preset` scene handling in `LightProgramDefault`
 - Add support for `scene_presets` interaction
 - Implement dynamic scene stopping logic
