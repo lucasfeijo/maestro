@@ -30,6 +30,32 @@ The original Home Assistant Python automation includes a variety of capabilities
   - `nighttime`
 - Implement sun-based time detection logic
 
+The Python automation in Examples/python_script.py already implements this logic. Around lines 320‑352, the script reads the sun state and computes the time_of_day value with several thresholds:
+
+When the sun is above the horizon, it compares the current time to next_setting.
+
+More than 2 hours before sunset → daytime
+
+Between 2 hours and 1 hour before sunset → pre_sunset
+
+Within the last hour before sunset → sunset
+
+Otherwise → nighttime
+
+This can be seen in the script output.
+
+The script uses time_of_day later (e.g., around lines 424‑464) to adjust lighting scenes. For example, in the “calm night” scene:
+
+If time_of_day is daytime or pre_sunset, it turns on certain lights with cooler color temperatures.
+
+If it is sunset or nighttime, it selects warmer colors and lower brightness, or turns some lights off.
+
+This behavior is visible in lines 420‑464 of the Python script.
+
+Summary
+
+Feature 4 of the roadmap calls for more refined time-of-day logic within the Swift project. The existing Python script already performs sun-based checks that produce four discrete periods—daytime, pre_sunset, sunset, and nighttime—using offsets from the sun’s next setting time. Lighting scenes are then tailored based on these periods. To match this behavior, the Swift StateContext should be extended so that it generates similar TimeOfDay values and exposes them to the rest of the program, enabling transitions and scene choices that mirror the automation logic of python_script.py.
+
 ### 5. Per-Shelf TV Light Control
 - Add support for individual shelf control via `input_boolean.wled_tv_shelf_n`
 - Update `light.tv_shelf_group` handling to support per-shelf adjustments
