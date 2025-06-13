@@ -64,7 +64,7 @@ The add-on manifest defines the image, startup behavior and option schema. Examp
 
 ```yaml
 name: Maestro
-version: "0.1.1"
+version: "0.1.2"
 slug: maestro
 description: Home Assistant lights orchestrator
 startup: application
