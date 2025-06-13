@@ -2,6 +2,10 @@
 
 The original Home Assistant Python automation includes a variety of capabilities that are not yet represented in the Swift implementation. Below is a prioritized list of features to implement in future versions.
 
+## Open ended questions
+
+### a: Given that Changeset simplified ignores changes of 1% or less in brightness, does that mean we cannot perform a smooth 1% at a time transition in a light, ever? Do we need to rework that part of simplified? It was added for a reason, I think.
+
 ## Quick Wins (Low Complexity)
 
 ### 1. Auto Mode Toggle *(implemented)*
