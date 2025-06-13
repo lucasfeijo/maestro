@@ -102,6 +102,15 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 
 ### 10. Side effects that require service calls that aren't light controls are cluttering maestro.swift, we need a structured way of collecting the side effects from the program step and performing them later in the light step (maybe rename light step?)
 
+`Maestro.run()` currently performs several service calls inline:
+
+- `setInputBoolean` is used to reset helper booleans like `kitchen_extra_brightness` when presence is lost.
+- `scene_presets.stop_all_dynamic_scenes` is triggered whenever a new scene is selected.
+- Every computed `LightState` is sent immediately through `setLightState`.
+- Errors from state fetching are logged on the spot.
+
+These actions are all side effects of deciding what the lights should do. Because they're executed directly, any new behaviour would further crowd `Maestro.run()` with additional service calls. A more maintainable approach is to collect all side effects during the PROGRAM step (lights, helper booleans, scene preset commands, logs, etc.) and execute them in the final LIGHTS step. This keeps decision making separate from performing the actions and declutters the core loop.
+
 ## Implementation Strategy
 
 1. Start with Quick Wins to build momentum and improve usability

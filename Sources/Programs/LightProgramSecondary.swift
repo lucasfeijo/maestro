@@ -4,11 +4,17 @@ public struct LightProgramSecondary: LightProgram {
     public let name = "secondary"
     public init() {}
 
-    public func computeStateSet(context: StateContext) -> LightStateChangeset {
+    public func compute(context: StateContext) -> ProgramOutput {
         let change = LightState(entityId: "light.secondary",
                                on: true,
                                brightness: 1,
                                transitionDuration: 2)
-        return LightStateChangeset(currentStates: context.states, desiredStates: [change])
+        let changeset = LightStateChangeset(currentStates: context.states, desiredStates: [change])
+        return ProgramOutput(changeset: changeset)
+    }
+
+    // Preserving previous API for tests
+    public func computeStateSet(context: StateContext) -> LightStateChangeset {
+        compute(context: context).changeset
     }
 }

@@ -31,15 +31,13 @@ public final class Maestro {
         switch result {
         case .success(let states):
             let context = StateContext(states: states)
-            if !context.environment.kitchenPresence {
-                lights.setInputBoolean(entityId: "input_boolean.kitchen_extra_brightness", to: false)
+            let output = program.compute(context: context)
+            var effects = output.sideEffects
+            for newLightState in output.changeset.simplified {
+                effects.append(.setLight(newLightState))
             }
-            if context.environment.autoMode && context.scene != .preset {
-                lights.stopAllDynamicScenes()
-            }
-            let stateSet = program.computeStateSet(context: context)
-            for newLightState in stateSet.simplified {
-                lights.setLightState(state: newLightState)
+            for effect in effects {
+                effect.perform(using: lights)
             }
         case .failure(let error):
             logger.error("Failed to fetch home assistant states: \(error)")
