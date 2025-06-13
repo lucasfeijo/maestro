@@ -1,5 +1,6 @@
 import Foundation
 
+// CHANGESET:
 public struct LightStateChangeset {
     public let desiredStates: [LightState]
     public let currentStates: HomeAssistantStateMap

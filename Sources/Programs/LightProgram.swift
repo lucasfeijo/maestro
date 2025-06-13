@@ -1,5 +1,6 @@
 import Foundation
 
+// PROGRAM:
 public protocol LightProgram {
     /// Human readable identifier for the program.
     var name: String { get }

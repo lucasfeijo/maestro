@@ -1,5 +1,6 @@
 import Foundation
 
+// CONTEXT:
 /// A context that represents the current state of the home automation system.
 ///
 /// StateContext interprets raw Home Assistant states into a structured representation

@@ -1,3 +1,4 @@
+// STATE:
 public protocol StateProvider {
     func fetchAllStates() -> Result<HomeAssistantStateMap, Error>
 }
