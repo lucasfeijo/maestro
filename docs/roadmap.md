@@ -17,7 +17,7 @@ The original Home Assistant Python automation includes a variety of capabilities
 
 ## Medium Complexity
 
-### 3. Transition Support
+### 3. Transition Support *(implemented)*
 - Add transition duration field to `LightState`
 - Update `LightController` implementations to handle transitions
 - Implement 2-second fade support for relevant actions

@@ -66,3 +66,5 @@ The maestro pipeline consists of 5 steps:
 
 This pipeline runs each time the `/run` endpoint is called, ensuring the lights always match the desired state based on current conditions.
 
+All light changes use a smooth 2-second transition for a more pleasant fade.
+

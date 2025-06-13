@@ -8,6 +8,7 @@ public struct LightProgramDefault: LightProgram {
         let scene = context.scene
         let environment = context.environment
         let states = context.states
+        let transition = 2.0
 
         guard environment.autoMode else {
             return LightStateChangeset(currentStates: states, desiredStates: [])
@@ -123,13 +124,16 @@ public struct LightProgramDefault: LightProgram {
         let scalePct = Double(scaleStr) ?? 100
         let scale = max(0.0, min(scalePct, 100.0)) / 100.0
         let scaledChanges = changes.map { state -> LightState in
-            guard let b = state.brightness else { return state }
-            let scaled = Int(round(Double(b) * scale))
-            let clamped = max(1, min(100, scaled))
+            var brightness = state.brightness
+            if let b = state.brightness {
+                let scaled = Int(round(Double(b) * scale))
+                brightness = max(1, min(100, scaled))
+            }
             return LightState(entityId: state.entityId,
                               on: state.on,
-                              brightness: clamped,
-                              colorTemperature: state.colorTemperature)
+                              brightness: brightness,
+                              colorTemperature: state.colorTemperature,
+                              transitionDuration: transition)
         }
 
         return LightStateChangeset(currentStates: states,
