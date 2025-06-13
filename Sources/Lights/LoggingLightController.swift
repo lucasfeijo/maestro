@@ -9,6 +9,7 @@ public final class LoggingLightController: LightController {
         var message = "[LOG] \(state.entityId) -> \(state.on ? "on" : "off")"
         if let b = state.brightness { message += " brightness:\(b)" }
         if let ct = state.colorTemperature { message += " colorTemp:\(ct)" }
+        if let t = state.transitionDuration { message += " transition:\(t)" }
         print(message)
     }
 }

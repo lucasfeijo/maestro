@@ -80,4 +80,17 @@ final class LightProgramDefaultTests: XCTestCase {
         let diff = LightProgramDefault().computeStateSet(context: context)
         XCTAssertTrue(diff.desiredStates.isEmpty)
     }
+
+    func testStatesIncludeTransitionDuration() {
+        let context = StateContext(states: ["input_select.living_scene": ["state": "normal"],
+                                      "sun.sun": ["state": "above_horizon"],
+                                      "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": ["state": "off"],
+                                      "binary_sensor.dining_espresence": ["state": "off"],
+                                      "binary_sensor.kitchen_espresence": ["state": "off"],
+                                      "input_boolean.kitchen_extra_brightness": ["state": "off"]])
+        let diff = LightProgramDefault().computeStateSet(context: context)
+        for state in diff.desiredStates {
+            XCTAssertEqual(state.transitionDuration, 2, "Expected transition of 2 seconds")
+        }
+    }
 }

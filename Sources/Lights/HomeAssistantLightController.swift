@@ -30,6 +30,7 @@ public final class HomeAssistantLightController: LightController {
         var body: [String: Any] = ["entity_id": state.entityId]
         if let b = state.brightness { body["brightness_pct"] = b }
         if let ct = state.colorTemperature { body["color_temp"] = ct }
+        if let t = state.transitionDuration { body["transition"] = t }
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
         let semaphore = DispatchSemaphore(value: 0)

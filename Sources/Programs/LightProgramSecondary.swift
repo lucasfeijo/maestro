@@ -5,7 +5,10 @@ public struct LightProgramSecondary: LightProgram {
     public init() {}
 
     public func computeStateSet(context: StateContext) -> LightStateChangeset {
-        let change = LightState(entityId: "light.secondary", on: true, brightness: 1)
+        let change = LightState(entityId: "light.secondary",
+                               on: true,
+                               brightness: 1,
+                               transitionDuration: 2)
         return LightStateChangeset(currentStates: context.states, desiredStates: [change])
     }
 }
