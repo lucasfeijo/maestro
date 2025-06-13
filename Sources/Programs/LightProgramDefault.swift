@@ -112,7 +112,7 @@ public struct LightProgramDefault: LightProgram {
             changes.on(["light.living_temperature_lights", "light.color_lights_without_tv_light", "light.window_led_strip", "light.zigbee_hub_estante_lights", "light.kitchen_led"], brightness: 100)
 
         case .preset:
-            break
+            changes.off("light.living_temperature_lights")
         }
 
         return changes
