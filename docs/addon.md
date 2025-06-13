@@ -4,10 +4,10 @@ This document outlines a high-level plan for packaging and running the `maestro`
 
 ## 1. Add-on directory structure
 
-Create an `addon` directory in this repository with the following files:
+Create a `maestro` directory in this repository with the following files:
 
 ```
-addon/
+maestro/
 ├── Dockerfile
 ├── run.sh
 └── config.json
@@ -65,7 +65,7 @@ The add-on manifest defines the image, startup behavior and option schema. Examp
 ```json
 {
   "name": "Maestro",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "slug": "maestro",
   "description": "Home Assistant lights orchestrator",
   "startup": "application",
@@ -109,7 +109,7 @@ Home Assistant uses this file when adding the repository URL to the Add-on Store
 
 ## 6. Installing the add-on
 
-1. Push the repository (including the new `addon` directory and `repository.json`) to GitHub or another git host.
+1. Push the repository (including the new `maestro` directory and `repository.json`) to GitHub or another git host.
 2. In Home Assistant, navigate to **Settings → Add-ons → Add-on Store → Repositories** and add the repository URL.
 3. The "Maestro" add-on will appear in the store. Install it and configure the options (base URL, token, etc.).
 4. Start the add-on. Home Assistant will pull/build the Docker image and run `maestro` inside the container.
@@ -119,7 +119,7 @@ Home Assistant uses this file when adding the repository URL to the Add-on Store
 For local testing without Home Assistant you can build the Docker image directly:
 
 ```bash
-docker build -t maestro-addon ./addon
+docker build -t maestro-addon ./maestro
 docker run --rm -e BASEURL=http://hass.local:8123/ -e TOKEN=YOUR_TOKEN maestro-addon
 ```
 
