@@ -5,6 +5,9 @@
   "description": "Home Assistant lights orchestrator",
   "startup": "application",
   "boot": "auto",
+  "build_from": {
+    "amd64": "ghcr.io/home-assistant/amd64-addon-base:latest"
+  },
   "options": {
     "baseurl": "http://homeassistant.local:8123/",
     "token": "",
