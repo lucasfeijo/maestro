@@ -1,5 +1,7 @@
-# maestro
+<div align="center">
+<h1>maestro</h1>
 Home assistant lights orchestrator
+</div>
 
 ## Compiling on macOS
 
