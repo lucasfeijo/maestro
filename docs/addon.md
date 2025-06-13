@@ -118,9 +118,22 @@ docker run --rm -e BASEURL=http://hass.local:8123/ -e TOKEN=YOUR_TOKEN maestro-a
 
 This mimics the environment that Home Assistant provides when running the add-on.
 
-## 8. Future considerations
+## 8. Automated Docker releases
 
-- Automate releases by pushing versioned Docker images to a registry.
+Versioned Docker images can be published automatically using GitHub Actions.
+The workflow in `.github/workflows/docker-publish.yml` builds the image from
+the `maestro` directory and pushes it to GitHub Container Registry whenever a
+new tag is pushed.
+
+1. Commit the workflow to your repository.
+2. Create a tag such as `v0.1.3` and push it to GitHub.
+3. The action builds `ghcr.io/<owner>/maestro:<tag>` and pushes the image.
+
+Home Assistant can then install the add-on using that image reference in
+`config.yaml`.
+
+## 9. Future considerations
+
 - Extend `config.yaml` with more options as new command line arguments are added to `maestro`.
 - Write documentation in the main README referencing this add-on guide.
 
