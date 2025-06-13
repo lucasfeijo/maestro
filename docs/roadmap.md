@@ -83,7 +83,7 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
   whatever dynamic effect was previously active. The comparison should ignore
   case so `"Solid"` and `"solid"` are treated the same.
 
-### 7. Nested Group Updates
+### 7. Nested Group Updates *(implemented)*
 - Implement recursive group handling similar to `process_light_group`
 - Add support for `update_specific_light` functionality
 - Create helper functions for group operations

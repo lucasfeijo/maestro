@@ -160,23 +160,34 @@ public struct LightProgramDefault: LightProgram {
                                     environment: StateContext.Environment,
                                     transition: Double) -> [LightState] {
         var expanded: [LightState] = []
+        let shelfIds = (1...5).map { "light.wled_tv_shelf_\($0)" }
         for state in changes {
             if state.entityId == "light.tv_shelf_group" {
-                for (idx, enabled) in environment.tvShelvesEnabled.enumerated() {
-                    let id = "light.wled_tv_shelf_\(idx + 1)"
+                var group = LightGroup.group(
+                    Dictionary(uniqueKeysWithValues: shelfIds.map { id in
+                        (id, LightGroup.light(LightState(entityId: id, on: false)))
+                    })
+                )
+                for (index, id) in shelfIds.enumerated() {
+                    let enabled = environment.tvShelvesEnabled[index]
+                    let shelfState: LightState
                     if enabled {
-                        expanded.append(LightState(entityId: id,
-                                                  on: state.on,
-                                                  brightness: state.brightness,
-                                                  colorTemperature: state.colorTemperature,
-                                                  effect: state.effect,
-                                                  transitionDuration: transition))
+                        shelfState = LightState(entityId: id,
+                                               on: state.on,
+                                               brightness: state.brightness,
+                                               colorTemperature: state.colorTemperature,
+                                               rgbColor: state.rgbColor,
+                                               rgbwColor: state.rgbwColor,
+                                               effect: state.effect,
+                                               transitionDuration: transition)
                     } else {
-                        expanded.append(LightState(entityId: id,
-                                                  on: false,
-                                                  transitionDuration: transition))
+                        shelfState = LightState(entityId: id,
+                                               on: false,
+                                               transitionDuration: transition)
                     }
+                    group.update(entityId: id, with: shelfState)
                 }
+                expanded.append(contentsOf: group.flattened())
             } else {
                 expanded.append(state)
             }
