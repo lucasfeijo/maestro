@@ -5,5 +5,5 @@ public protocol LightProgram {
     var name: String { get }
 
     /// Compute the desired light state set for the given context.
-    func computeStateSet(context: StateContext) -> LightStateSet
+    func computeStateSet(context: StateContext) -> LightStateChangeset
 }

@@ -4,7 +4,7 @@ public struct LightProgramDefault: LightProgram {
     public let name = "default"
     public init() {}
 
-    public func computeStateSet(context: StateContext) -> LightStateSet {
+    public func computeStateSet(context: StateContext) -> LightStateChangeset {
         let scene = context.scene
         let environment = context.environment
         let states = context.states
@@ -115,6 +115,6 @@ public struct LightProgramDefault: LightProgram {
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
 
-        return LightStateSet(changes: changes, currentStates: states)
+        return LightStateChangeset(currentStates: states, desiredStates: changes)
     }
 }

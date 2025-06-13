@@ -7,7 +7,7 @@ final class LightProgramDefaultTests: XCTestCase {
         let diff = LightProgramDefault().computeStateSet(context: context)
         
         // Verify all lights are turned off
-        for lightState in diff.changes {
+        for lightState in diff.desiredStates {
             XCTAssertFalse(lightState.on, "Expected light \(lightState.entityId) to be off")
         }
     }
@@ -23,10 +23,10 @@ final class LightProgramDefaultTests: XCTestCase {
         ])
         let diff = LightProgramDefault().computeStateSet(context: context)
         
-        let tvLight = diff.changes.first { $0.entityId == "light.tv_light" }
+        let tvLight = diff.desiredStates.first { $0.entityId == "light.tv_light" }
         XCTAssertFalse(tvLight?.on ?? true)
         
-        let tvShelf = diff.changes.first { $0.entityId == "light.tv_shelf_group" }
+        let tvShelf = diff.desiredStates.first { $0.entityId == "light.tv_shelf_group" }
         XCTAssertFalse(tvShelf?.on ?? true)
     }
 
@@ -41,7 +41,7 @@ final class LightProgramDefaultTests: XCTestCase {
         ])
         let diff = LightProgramDefault().computeStateSet(context: context)
         
-        let tvLight = diff.changes.first { $0.entityId == "light.tv_light" }
+        let tvLight = diff.desiredStates.first { $0.entityId == "light.tv_light" }
         XCTAssertFalse(tvLight?.on ?? true)
     }
 
@@ -67,8 +67,8 @@ final class LightProgramDefaultTests: XCTestCase {
         let diffWithoutPresence = LightProgramDefault().computeStateSet(context: contextWithoutPresence)
         
         // dining table brighter when presence detected
-        let diningWithPresence = diffWithPresence.changes.first { $0.entityId == "light.dining_table_light" }
-        let diningWithoutPresence = diffWithoutPresence.changes.first { $0.entityId == "light.dining_table_light" }
+        let diningWithPresence = diffWithPresence.desiredStates.first { $0.entityId == "light.dining_table_light" }
+        let diningWithoutPresence = diffWithoutPresence.desiredStates.first { $0.entityId == "light.dining_table_light" }
         XCTAssertGreaterThan(diningWithPresence?.brightness ?? 0, diningWithoutPresence?.brightness ?? 0)
     }
 }

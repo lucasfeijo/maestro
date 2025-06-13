@@ -1,11 +1,11 @@
 import Foundation
 
-public struct LightStateSet {
-    public let changes: [LightState]
+public struct LightStateChangeset {
+    public let desiredStates: [LightState]
     public let currentStates: HomeAssistantStateMap
 
-    public init(changes: [LightState], currentStates: HomeAssistantStateMap) {
-        self.changes = changes
+    public init(currentStates: HomeAssistantStateMap, desiredStates: [LightState]) {
+        self.desiredStates = desiredStates
         self.currentStates = currentStates
     }
 
@@ -13,7 +13,7 @@ public struct LightStateSet {
     /// the current Home Assistant state.
     public var simplified: [LightState] {
         var simplified: [LightState] = []
-        for change in changes {
+        for change in desiredStates {
             if let current = currentStates[change.entityId],
                let state = current["state"] as? String {
                 var shouldSend = false
