@@ -29,7 +29,33 @@ public struct StateContext {
         }
 
         let sunState = states["sun.sun"]?["state"] as? String ?? "below_horizon"
-        let timeOfDay: TimeOfDay = sunState == "above_horizon" ? .daytime : .nighttime
+        var timeOfDay: TimeOfDay = .nighttime
+        if sunState == "above_horizon" {
+            if let attrs = states["sun.sun"]?["attributes"] as? [String: Any],
+               let nextSettingStr = attrs["next_setting"] as? String {
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                if let nextSetting = formatter.date(from: nextSettingStr) {
+                    let now = Date()
+                    let oneHourBefore = nextSetting.addingTimeInterval(-3600)
+                    let twoHoursBefore = nextSetting.addingTimeInterval(-7200)
+                    let eighteenHoursBefore = nextSetting.addingTimeInterval(-64800)
+                    if now > oneHourBefore {
+                        timeOfDay = .sunset
+                    } else if now > twoHoursBefore {
+                        timeOfDay = .preSunset
+                    } else if now < eighteenHoursBefore {
+                        timeOfDay = .nighttime
+                    } else {
+                        timeOfDay = .daytime
+                    }
+                } else {
+                    timeOfDay = .daytime
+                }
+            } else {
+                timeOfDay = .daytime
+            }
+        }
         let hyperionRunning = states["binary_sensor.living_tv_hyperion_running_condition_for_the_scene"]?["state"] as? String == "on"
         let diningPresence = states["binary_sensor.dining_espresence"]?["state"] as? String == "on"
         let kitchenPresence = states["binary_sensor.kitchen_espresence"]?["state"] as? String == "on"

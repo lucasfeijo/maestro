@@ -22,7 +22,7 @@ The original Home Assistant Python automation includes a variety of capabilities
 - Update `LightController` implementations to handle transitions
 - Implement 2-second fade support for relevant actions
 
-### 4. Advanced Time-of-Day Handling
+### 4. Advanced Time-of-Day Handling *(implemented)*
 - Extend `StateContext` to support additional states:
   - `daytime`
   - `pre_sunset`
