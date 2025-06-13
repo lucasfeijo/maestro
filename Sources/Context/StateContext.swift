@@ -58,7 +58,9 @@ public struct StateContext {
         }
         let hyperionRunning = states["binary_sensor.living_tv_hyperion_running_condition_for_the_scene"]?["state"] as? String == "on"
         let diningPresence = states["binary_sensor.dining_espresence"]?["state"] as? String == "on"
-        let kitchenPresence = states["binary_sensor.kitchen_espresence"]?["state"] as? String == "on"
+        let kitchenPresenceEspresence = states["binary_sensor.kitchen_espresence"]?["state"] as? String == "on"
+        let kitchenPresenceOccupancy = states["binary_sensor.kitchen_presence_occupancy"]?["state"] as? String == "on"
+        let kitchenPresence = kitchenPresenceEspresence || kitchenPresenceOccupancy
         let kitchenExtraBrightness = states["input_boolean.kitchen_extra_brightness"]?["state"] as? String == "on"
         let autoMode = states["input_boolean.living_scene_auto"]?["state"] as? String != "off"
         var tvShelves: [Bool] = []

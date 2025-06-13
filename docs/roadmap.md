@@ -89,7 +89,7 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 - Add support for `scene_presets` interaction
 - Implement dynamic scene stopping logic
 
-### 9. Presence-Based Kitchen Sink Behavior
+### 9. Presence-Based Kitchen Sink Behavior *(implemented)*
 - Add support for multiple presence sensors:
   - `kitchen_espresence`
   - `kitchen_presence_occupancy`

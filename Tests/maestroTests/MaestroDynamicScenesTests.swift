@@ -10,8 +10,12 @@ final class MaestroDynamicScenesTests: XCTestCase {
 
     final class DummyLightController: LightController {
         var stopCount = 0
+        var boolChanges: [(String, Bool)] = []
         func setLightState(state: LightState) {}
         func stopAllDynamicScenes() { stopCount += 1 }
+        func setInputBoolean(entityId: String, to state: Bool) {
+            boolChanges.append((entityId, state))
+        }
     }
 
     final class StubProgram: LightProgram {
@@ -41,5 +45,18 @@ final class MaestroDynamicScenesTests: XCTestCase {
         let maestro = Maestro(states: provider, lights: lights, program: StubProgram(), logger: Logger(pusher: nil))
         maestro.run()
         XCTAssertEqual(lights.stopCount, 0)
+    }
+
+    func testTurnsOffKitchenExtraBrightnessWhenNoPresence() {
+        let provider = DummyStateProvider(states: [
+            "input_select.living_scene": ["state": "normal"],
+            "binary_sensor.kitchen_espresence": ["state": "off"],
+            "input_boolean.kitchen_extra_brightness": ["state": "on"]
+        ])
+        let lights = DummyLightController()
+        let maestro = Maestro(states: provider, lights: lights, program: StubProgram(), logger: Logger(pusher: nil))
+        maestro.run()
+        XCTAssertEqual(lights.boolChanges.first?.0, "input_boolean.kitchen_extra_brightness")
+        XCTAssertEqual(lights.boolChanges.first?.1, false)
     }
 }

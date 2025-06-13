@@ -103,6 +103,7 @@ final class LightProgramDefaultTests: XCTestCase {
             "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": ["state": "off"],
             "binary_sensor.dining_espresence": ["state": "off"],
             "binary_sensor.kitchen_espresence": ["state": "off"],
+            "binary_sensor.kitchen_presence_occupancy": ["state": "off"],
             "input_boolean.kitchen_extra_brightness": ["state": "off"],
             "input_boolean.wled_tv_shelf_1": ["state": "on"],
             "input_boolean.wled_tv_shelf_2": ["state": "off"],
@@ -117,5 +118,52 @@ final class LightProgramDefaultTests: XCTestCase {
 
         let shelf3 = diff.desiredStates.first { $0.entityId == "light.wled_tv_shelf_3" }
         XCTAssertEqual(shelf3?.brightness, 100)
+    }
+
+    func testKitchenPresenceFromEitherSensor() {
+        let context = StateContext(states: [
+            "input_select.living_scene": ["state": "normal"],
+            "sun.sun": ["state": "above_horizon"],
+            "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": ["state": "off"],
+            "binary_sensor.dining_espresence": ["state": "off"],
+            "binary_sensor.kitchen_espresence": ["state": "off"],
+            "binary_sensor.kitchen_presence_occupancy": ["state": "on"],
+            "input_boolean.kitchen_extra_brightness": ["state": "off"]
+        ])
+        let diff = LightProgramDefault().computeStateSet(context: context)
+        let sink = diff.desiredStates.first { $0.entityId == "light.kitchen_sink_light" }
+        XCTAssertEqual(sink?.brightness, 60)
+        XCTAssertEqual(sink?.rgbwColor?.3, 255)
+    }
+
+    func testKitchenSinkNightColor() {
+        let context = StateContext(states: [
+            "input_select.living_scene": ["state": "normal"],
+            "sun.sun": ["state": "below_horizon"],
+            "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": ["state": "off"],
+            "binary_sensor.dining_espresence": ["state": "off"],
+            "binary_sensor.kitchen_espresence": ["state": "on"],
+            "input_boolean.kitchen_extra_brightness": ["state": "off"]
+        ])
+        let diff = LightProgramDefault().computeStateSet(context: context)
+        let sink = diff.desiredStates.first { $0.entityId == "light.kitchen_sink_light" }
+        XCTAssertEqual(sink?.rgbwColor?.0, 230)
+        XCTAssertEqual(sink?.rgbwColor?.1, 170)
+        XCTAssertEqual(sink?.rgbwColor?.2, 30)
+        XCTAssertEqual(sink?.rgbwColor?.3, 150)
+    }
+
+    func testKitchenSinkNoPresenceProducesDimLight() {
+        let context = StateContext(states: [
+            "input_select.living_scene": ["state": "normal"],
+            "sun.sun": ["state": "above_horizon"],
+            "binary_sensor.living_tv_hyperion_running_condition_for_the_scene": ["state": "off"],
+            "binary_sensor.dining_espresence": ["state": "off"],
+            "binary_sensor.kitchen_espresence": ["state": "off"],
+            "input_boolean.kitchen_extra_brightness": ["state": "on"]
+        ])
+        let diff = LightProgramDefault().computeStateSet(context: context)
+        let sink = diff.desiredStates.first { $0.entityId == "light.kitchen_sink_light" }
+        XCTAssertEqual(sink?.brightness, 10)
     }
 }

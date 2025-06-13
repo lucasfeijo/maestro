@@ -121,6 +121,12 @@ public struct LightProgramDefault: LightProgram {
     private func applyKitchenSink(scene: StateContext.Scene,
                                   environment: StateContext.Environment,
                                   changes: inout [LightState]) {
+        let sinkColor: (Int, Int, Int, Int)
+        if environment.timeOfDay == .daytime || environment.timeOfDay == .preSunset {
+            sinkColor = (0, 0, 0, 255)
+        } else {
+            sinkColor = (230, 170, 30, 150)
+        }
         let kitchenOnBrightness: Int
         if environment.kitchenPresence {
             if (scene == .calmNight || scene == .normal || scene == .off) && !environment.kitchenExtraBrightness {
@@ -128,10 +134,10 @@ public struct LightProgramDefault: LightProgram {
             } else {
                 kitchenOnBrightness = 100
             }
-            changes.on("light.kitchen_sink_light", brightness: kitchenOnBrightness)
+            changes.on("light.kitchen_sink_light", brightness: kitchenOnBrightness, rgbwColor: sinkColor)
             changes.on("light.kitchen_sink_light_old", brightness: 20)
         } else if scene != .off {
-            changes.on("light.kitchen_sink_light", brightness: 10)
+            changes.on("light.kitchen_sink_light", brightness: 10, rgbwColor: sinkColor)
             changes.on("light.kitchen_sink_light_old", brightness: 10)
         }
     }
@@ -179,6 +185,8 @@ public struct LightProgramDefault: LightProgram {
                               on: state.on,
                               brightness: brightness,
                               colorTemperature: state.colorTemperature,
+                              rgbColor: state.rgbColor,
+                              rgbwColor: state.rgbwColor,
                               transitionDuration: transition)
         }
     }
