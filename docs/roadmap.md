@@ -67,12 +67,16 @@ Feature 4 of the roadmap calls for more refined time-of-day logic within the Swi
 
 ## High Complexity
 
-### 6. Light Colors and Effects
+### 6.1. Light Colors
 - Extend `LightState` to support:
   - `rgb_color`
   - `rgbw_color`
-  - `effect` values
-- Update `LightStateChangeset` to compare color and effect values
+- Update `LightStateChangeset` to compare color values
+- Modify light controller implementations accordingly
+
+### 6.2. Effects
+- Extend `LightState` to support `effect` values
+- Update `LightStateChangeset` to compare effect values
 - Modify light controller implementations accordingly
 
 ### 7. Nested Group Updates

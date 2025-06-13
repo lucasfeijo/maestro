@@ -30,6 +30,8 @@ public final class HomeAssistantLightController: LightController {
         var body: [String: Any] = ["entity_id": state.entityId]
         if let b = state.brightness { body["brightness_pct"] = b }
         if let ct = state.colorTemperature { body["color_temp"] = ct }
+        if let rgb = state.rgbColor { body["rgb_color"] = [rgb.0, rgb.1, rgb.2] }
+        if let rgbw = state.rgbwColor { body["rgbw_color"] = [rgbw.0, rgbw.1, rgbw.2, rgbw.3] }
         if let t = state.transitionDuration { body["transition"] = t }
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 

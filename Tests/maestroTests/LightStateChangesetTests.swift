@@ -35,4 +35,21 @@ final class LightStateChangesetTests: XCTestCase {
         ).simplified
         XCTAssertTrue(simplified.isEmpty)
     }
+
+    func testSimplifiedIncludesColorChanges() {
+        let simplified = LightStateChangeset(
+            currentStates: ["light.color_light": ["state": "on", "attributes": ["rgb_color": [255, 0, 0]]]],
+            desiredStates: [LightState(entityId: "light.color_light", on: true, rgbColor: (0, 255, 0))]
+        ).simplified
+        let color = simplified.first { $0.entityId == "light.color_light" }
+        XCTAssertEqual(color?.rgbColor?.1, 255)
+    }
+
+    func testSimplifiedFiltersUnchangedColors() {
+        let simplified = LightStateChangeset(
+            currentStates: ["light.color_light": ["state": "on", "attributes": ["rgb_color": [1, 2, 3]]]],
+            desiredStates: [LightState(entityId: "light.color_light", on: true, rgbColor: (1, 2, 3))]
+        ).simplified
+        XCTAssertTrue(simplified.isEmpty)
+    }
 }
