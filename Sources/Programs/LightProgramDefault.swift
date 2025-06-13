@@ -4,6 +4,20 @@ public struct LightProgramDefault: LightProgram {
     public let name = "default"
     public init() {}
 
+    public func compute(context: StateContext) -> ProgramOutput {
+        var sideEffects: [SideEffect] = []
+        if !context.environment.kitchenPresence {
+            sideEffects.append(.setInputBoolean(entityId: "input_boolean.kitchen_extra_brightness", state: false))
+        }
+        if context.environment.autoMode && context.scene != .preset {
+            sideEffects.append(.stopAllDynamicScenes)
+        }
+
+        let changeset = computeStateSet(context: context)
+        return ProgramOutput(changeset: changeset, sideEffects: sideEffects)
+    }
+
+    // Original method preserved for direct tests
     public func computeStateSet(context: StateContext) -> LightStateChangeset {
         let scene = context.scene
         let environment = context.environment

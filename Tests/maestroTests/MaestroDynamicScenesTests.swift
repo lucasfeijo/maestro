@@ -20,9 +20,18 @@ final class MaestroDynamicScenesTests: XCTestCase {
 
     final class StubProgram: LightProgram {
         let name = "stub"
-        func computeStateSet(context: StateContext) -> LightStateChangeset {
-            .init(currentStates: context.states, desiredStates: [])
+        func compute(context: StateContext) -> ProgramOutput {
+            var effects: [SideEffect] = []
+            if context.environment.autoMode && context.scene != .preset {
+                effects.append(.stopAllDynamicScenes)
+            }
+            if !context.environment.kitchenPresence {
+                effects.append(.setInputBoolean(entityId: "input_boolean.kitchen_extra_brightness", state: false))
+            }
+            return ProgramOutput(changeset: LightStateChangeset(currentStates: context.states, desiredStates: []), sideEffects: effects)
         }
+        // maintain old method for convenience
+        func computeStateSet(context: StateContext) -> LightStateChangeset { .init(currentStates: context.states, desiredStates: []) }
     }
 
     func testStopsDynamicScenesWhenNotPreset() {
