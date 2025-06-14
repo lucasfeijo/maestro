@@ -14,6 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.1.0"
+
+      - name: Build Maestro server
+        run: swift build --configuration release
+
+      - name: Copy Maestro binary into add-on
+        run: |
+          mkdir -p maestro/rootfs/usr/local/bin
+          cp .build/release/maestro maestro/rootfs/usr/local/bin/
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -36,7 +48,7 @@ jobs:
             --build-arg BUILD_FROM=ghcr.io/home-assistant/aarch64-base:3.15 \
             -t ghcr.io/${{ github.repository_owner }}/aarch64-maestro:debug \
             -f maestro/Dockerfile \
-            . \
+            ./maestro \
             --push
 
           echo "Verifying image..."

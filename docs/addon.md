@@ -21,27 +21,14 @@ Home Assistant expects this structure when cloning the repository as an add-on s
 
 ## 2. Dockerfile
 
-The Dockerfile builds the project in a multi-stage setup so the final image
-contains only the compiled binary.
+The Dockerfile uses the Home Assistant base images provided in `build.yaml`:
 
 ```Dockerfile
 ARG BUILD_FROM
-ARG SWIFT_VERSION=6.1
-
-FROM swift:$SWIFT_VERSION AS build
-WORKDIR /app
-COPY Package.swift .
-COPY Sources Sources
-RUN swift build --configuration release
-
 FROM $BUILD_FROM
-COPY maestro/run.sh /run.sh
-RUN chmod +x /run.sh
-COPY --from=build /app/.build/release/maestro /usr/local/bin/maestro
 ```
 
-`home-assistant/builder` supplies the `BUILD_FROM` argument when building for
-each architecture, ensuring the binary matches the target platform.
+`home-assistant/builder` supplies the `BUILD_FROM` argument when building for each architecture.
 
 ## 3. Entrypoint script
 
