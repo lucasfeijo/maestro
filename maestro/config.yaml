@@ -16,7 +16,7 @@ schema:
   simulate: bool
   no_notify: bool
   program: str?
-image: ghcr.io/<owner>/{arch}-maestro
+image: ghcr.io/lucasfeijo/{arch}-maestro
 arch:
   - amd64
   - armhf
