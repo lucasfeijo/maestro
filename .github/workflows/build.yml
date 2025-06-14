@@ -47,4 +47,6 @@ jobs:
         with:
           args: |
             --all
+            --repository https://github.com/${{ github.repository }}
+            --branch main
             --target maestro
