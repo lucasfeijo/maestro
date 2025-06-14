@@ -57,6 +57,5 @@ jobs:
           echo "Checking image details..."
           docker inspect ghcr.io/${{ github.repository_owner }}/aarch64-maestro:debug
 
-          echo "Listing available tags..."
-          curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://ghcr.io/v2/${{ github.repository_owner }}/aarch64-maestro/tags/list | jq . 
+          echo "Testing image run..."
+          docker run --rm --platform linux/arm64 ghcr.io/${{ github.repository_owner }}/aarch64-maestro:debug /bin/sh -c "echo 'Image is working!'" 
