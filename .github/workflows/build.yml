@@ -15,6 +15,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.1.0"
+
+      - name: Build Maestro server
+        run: swift build --configuration release
+
+      - name: Copy Maestro binary into add-on
+        run: |
+          mkdir -p maestro/rootfs/usr/local/bin
+          cp .build/release/maestro maestro/rootfs/usr/local/bin/
 
       - name: Get version from config
         id: get_version
@@ -38,8 +50,8 @@ jobs:
       - name: Build & push add-on image
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: maestro/Dockerfile
+          context: ./maestro
+          file: ./maestro/Dockerfile
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: true
           build-args: |
