@@ -19,4 +19,4 @@ default:
     program = LightProgramDefault()
 }
 let maestro = Maestro(states: states, lights: lights, program: program, logger: logger)
-try startServer(on: 8080, maestro: maestro)
+try startServer(on: options.port, maestro: maestro)

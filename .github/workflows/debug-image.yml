@@ -24,8 +24,8 @@ jobs:
 
       - name: Copy Maestro binary into add-on
         run: |
-          mkdir -p maestro/rootfs/bin
-          cp .build/release/maestro maestro/rootfs/bin/
+          mkdir -p maestro/rootfs/usr/local/bin
+          cp .build/release/maestro maestro/rootfs/usr/local/bin/
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3

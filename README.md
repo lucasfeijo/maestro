@@ -25,6 +25,7 @@ swift run maestro
  --simulate # print light commands to stdout instead of sending them
  --no-notify # disable Home Assistant persistent notifications on failures
  --program secondary # choose the light program to run (`default` or `secondary`)
+ --port 8080 # port for the HTTP server (default 8080)
 ```
 
 The package builds on Linux and macOS. On macOS the POSIX server code uses the
@@ -41,6 +42,7 @@ Example request:
 ```bash
 curl http://localhost:8080/run
 ```
+Replace `8080` with the port specified by `--port` if different.
 
 If the path is anything other than `/run`, the server responds with `404 Not
 Found`.
