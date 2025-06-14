@@ -29,6 +29,8 @@ FROM $BUILD_FROM
 ```
 
 `home-assistant/builder` supplies the `BUILD_FROM` argument when building for each architecture.
+For local builds, the Dockerfile defaults to the amd64 base image. Override it
+with `--build-arg BUILD_FROM=<image>` if needed.
 
 ## 3. Entrypoint script
 
