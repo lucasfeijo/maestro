@@ -1,5 +1,5 @@
 ARG BUILD_FROM
-FROM ${BUILD_FROM} AS build
+FROM ${BUILD_FROM}
 
 # Build stage
 FROM swift:6.1-focal AS swift-build
