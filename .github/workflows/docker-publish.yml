@@ -44,8 +44,8 @@ jobs:
             --image "maestro" \
             --docker-hub "ghcr.io/${{ github.repository_owner }}" \
             --addon \
-            --build-arg BUILD_FROM=ghcr.io/hassio-addons/base/amd64:13.2.2 \
-            --build-arg BUILD_ARCH=amd64 \
-            --build-arg BUILD_VERSION=${{ github.ref_name }} \
-            --build-arg TEMPIO_VERSION=2021.09.0 \
+            --build-from "ghcr.io/hassio-addons/base/amd64:13.2.2" \
+            --build-arch "amd64" \
+            --build-version "${{ github.ref_name }}" \
+            --build-tempio "2021.09.0" \
             --push
