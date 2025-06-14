@@ -2,7 +2,7 @@ ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
 # Build stage
-FROM swift:6.1-focal AS swift-build
+FROM swift:5.9-focal AS swift-build
 WORKDIR /build
 COPY .. .
 RUN swift build -c release
