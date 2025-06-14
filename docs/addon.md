@@ -41,7 +41,9 @@ COPY --from=build /app/.build/release/maestro /usr/local/bin/maestro
 ```
 
 `home-assistant/builder` supplies the `BUILD_FROM` argument when building for
-each architecture, ensuring the binary matches the target platform.
+each architecture. The builder stage uses a Swift image for the same
+architecture, so images are published only for `amd64` and `arm64` where official
+Swift builds are available.
 
 ## 3. Entrypoint script
 
