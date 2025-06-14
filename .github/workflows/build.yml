@@ -11,6 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug maestro folder
+        run: |
+          echo "Contents of maestro/:"
+          ls -l maestro
+
       - name: Set up Swift
         uses: swift-actions/setup-swift@v2
         with:
