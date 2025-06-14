@@ -3,6 +3,9 @@ ARG BUILD_ARCH
 ARG BUILD_VERSION
 FROM ${BUILD_FROM}
 
+# Re-declare build arguments for use after the FROM directive.
+ARG BUILD_ARCH
+ARG BUILD_VERSION
 ARG TEMPIO_VERSION
 RUN \
     curl -sSLf -o /usr/bin/tempio \
