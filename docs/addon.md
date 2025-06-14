@@ -21,14 +21,13 @@ Home Assistant expects this structure when cloning the repository as an add-on s
 
 ## 2. Dockerfile
 
-The Dockerfile should:
+The Dockerfile now pulls the prebuilt `maestro` image from GitHub Container Registry:
 
-1. Use `swift:6.1-focal` to compile the project and `ghcr.io/home-assistant/amd64-addon-base:latest` as the runtime image.
-2. Copy the repository into the container and run `swift build -c release` to produce the `maestro` binary.
-3. Copy the compiled `maestro` binary and the `run.sh` script into the runtime image.
-4. Set `run.sh` as the container entrypoint.
+```Dockerfile
+FROM ghcr.io/<owner>/maestro:latest
+```
 
-This multi-stage build keeps the final image small while compiling the Swift code during the build step.
+It only copies `run.sh` into the container and sets it as the entrypoint. The heavy Swift compilation happens in CI when publishing the `maestro` image.
 
 ## 3. Entrypoint script
 
@@ -61,8 +60,6 @@ slug: maestro
 description: Home Assistant lights orchestrator
 startup: application
 boot: auto
-build_from:
-  amd64: ghcr.io/home-assistant/amd64-addon-base:latest
 options:
   baseurl: http://homeassistant.local:8123/
   token: ''
@@ -75,7 +72,7 @@ schema:
   simulate: bool
   no_notify: bool
   program: str?
-image: local/maestro
+image: ghcr.io/<owner>/maestro
 ```
 
 Users can adjust the options in the Home Assistant UI. They are exported as environment variables with the same names in uppercase.

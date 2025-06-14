@@ -1,19 +1,9 @@
-ARG BUILD_FROM
-FROM ${BUILD_FROM}
+ARG MAESTRO_IMAGE
+ARG BUILD_ARCH
+ARG BUILD_VERSION
+FROM ${MAESTRO_IMAGE}
 
-# Build stage
-FROM swift:5.9-jammy AS swift-build
-WORKDIR /build
-COPY Package.swift ./
-COPY Sources ./Sources
-COPY Tests ./Tests
-RUN swift package resolve
-RUN swift build -c release
-
-# Runtime stage
-FROM ${BUILD_FROM}
 WORKDIR /app
-COPY --from=swift-build /build/.build/release/maestro /usr/local/bin/maestro
 COPY run.sh /usr/local/bin/run.sh
 RUN chmod +x /usr/local/bin/run.sh
 
