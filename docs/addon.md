@@ -23,7 +23,7 @@ Home Assistant expects this structure when cloning the repository as an add-on s
 
 The Dockerfile should:
 
-1. Use `swift:6.1-focal` to compile the project and `ghcr.io/home-assistant/amd64-addon-base:latest` as the runtime image.
+1. Use `swift:6.1-focal` to compile the project and `ghcr.io/home-assistant/amd64-addon-base:14` as the runtime image.
 2. Copy the repository into the container and run `swift build -c release` to produce the `maestro` binary.
 3. Copy the compiled `maestro` binary and the `run.sh` script into the runtime image.
 4. Set `run.sh` as the container entrypoint.
@@ -62,7 +62,7 @@ description: Home Assistant lights orchestrator
 startup: application
 boot: auto
 build_from:
-  amd64: ghcr.io/home-assistant/amd64-addon-base:latest
+  amd64: ghcr.io/home-assistant/amd64-addon-base:14
 options:
   baseurl: http://homeassistant.local:8123/
   token: ''

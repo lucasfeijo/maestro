@@ -5,7 +5,7 @@ The add-on compiles using the official Swift image and then runs on the Home Ass
 ```Dockerfile
 FROM swift:6.1-focal AS build
 # ... build maestro ...
-FROM ghcr.io/home-assistant/amd64-addon-base:latest
+FROM ghcr.io/home-assistant/amd64-addon-base:14
 ```
 
 When Home Assistant builds the add-on it pulls these images automatically. Local
