@@ -8,4 +8,8 @@ ARGS=()
 [ "$NO_NOTIFY" = "true" ] && ARGS+=(--no-notify)
 [ -n "$PROGRAM" ] && ARGS+=(--program "$PROGRAM")
 
-exec /usr/local/bin/maestro "${ARGS[@]}"
+if [[ -x /usr/local/bin/maestro ]]; then
+  exec /usr/local/bin/maestro "${ARGS[@]}"
+else
+  exec swift run maestro "${ARGS[@]}"
+fi
