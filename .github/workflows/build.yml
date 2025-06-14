@@ -21,8 +21,8 @@ jobs:
 
       - name: Copy Maestro binary into add-on
         run: |
-          mkdir -p example/rootfs/bin
-          cp .build/release/maestro example/rootfs/bin/
+          mkdir -p maestro/rootfs/bin
+          cp .build/release/maestro maestro/rootfs/bin/
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -40,8 +40,8 @@ jobs:
       - name: Build & push add-on image
         uses: docker/build-push-action@v6
         with:
-          context: example
-          file: example/Dockerfile
+          context: ./maestro
+          file:   ./maestro/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/hass-addon-maestro:latest
+          tags: ghcr.io/${{ github.repository_owner }}/maestro:latest
