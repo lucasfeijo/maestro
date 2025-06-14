@@ -4,7 +4,10 @@ FROM ${BUILD_FROM}
 # Build stage
 FROM swift:5.9-jammy AS swift-build
 WORKDIR /build
-COPY .. .
+COPY Package.swift ./
+COPY Sources ./Sources
+COPY Tests ./Tests
+RUN swift package resolve
 RUN swift build -c release
 
 # Runtime stage
