@@ -1,6 +1,4 @@
-# Base image for local builds. Home Assistant's builder overrides this
-# when building for each architecture using `build.yaml`.
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:3.15
+ARG BUILD_FROM
 ARG BUILD_ARCH
 ARG BUILD_VERSION
 FROM ${BUILD_FROM}

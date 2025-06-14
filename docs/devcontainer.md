@@ -9,6 +9,3 @@ Local builds mirror the Home Assistant process:
 docker build -t maestro-addon ./docker
 docker run --rm maestro-addon
 ```
-The Dockerfile defaults to the amd64 base image, so you can build locally
-without specifying `BUILD_FROM`. Pass `--build-arg BUILD_FROM=<image>` to use a
-different base.
