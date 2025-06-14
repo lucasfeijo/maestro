@@ -21,13 +21,14 @@ Home Assistant expects this structure when cloning the repository as an add-on s
 
 ## 2. Dockerfile
 
-The Dockerfile now pulls the prebuilt `maestro` image from GitHub Container Registry:
+The Dockerfile uses the Home Assistant base images provided in `build.yaml`:
 
 ```Dockerfile
-FROM ghcr.io/<owner>/maestro:latest
+ARG BUILD_FROM
+FROM $BUILD_FROM
 ```
 
-It only copies `run.sh` into the container and sets it as the entrypoint. The heavy Swift compilation happens in CI when publishing the `maestro` image.
+`home-assistant/builder` supplies the `BUILD_FROM` argument when building for each architecture.
 
 ## 3. Entrypoint script
 
@@ -72,7 +73,7 @@ schema:
   simulate: bool
   no_notify: bool
   program: str?
-image: ghcr.io/<owner>/maestro
+image: ghcr.io/<owner>/{arch}-maestro
 ```
 
 Users can adjust the options in the Home Assistant UI. They are exported as environment variables with the same names in uppercase.

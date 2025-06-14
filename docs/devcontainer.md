@@ -1,13 +1,9 @@
 # Add-on build container
 
-The add-on now reuses the maestro image published to GitHub Container Registry.
+The Dockerfile uses the standard Home Assistant base images defined in
+`build.yaml` and is built with `home-assistant/builder`.
 
-```Dockerfile
-FROM ghcr.io/<owner>/maestro:latest
-```
-
-When Home Assistant builds the add-on it pulls this image automatically. Local
-builds behave the same way:
+Local builds mirror the Home Assistant process:
 
 ```bash
 docker build -t maestro-addon ./docker

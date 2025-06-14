@@ -82,7 +82,7 @@ their enable switches.
 When the selected scene is `preset`, maestro only turns off the `light.living_temperature_lights` group and leaves other lights untouched. This allows the [scene_presets](https://github.com/Hypfer/hass-scene_presets) integration to run dynamic color scenes. Whenever a different scene is chosen, maestro sends a request to `scene_presets.stop_all_dynamic_scenes` to ensure any running dynamic scenes are stopped.
 
 For details on running maestro as a Home Assistant add-on, see [docs/addon.md](docs/addon.md).
-The add-on's Dockerfile now pulls the prebuilt image from GitHub Container Registry
-and simply copies the `run.sh` script. See [docs/devcontainer.md](docs/devcontainer.md)
-for more information.
+The add-on Dockerfile now uses the Home Assistant base images and is built with
+`home-assistant/builder`. See [docs/devcontainer.md](docs/devcontainer.md) for
+more information.
 
