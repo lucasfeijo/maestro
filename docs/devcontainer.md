@@ -1,14 +1,12 @@
 # Add-on build container
 
-The add-on compiles using the official Swift image and then runs on the Home Assistant base image.
+The add-on now reuses the maestro image published to GitHub Container Registry.
 
 ```Dockerfile
-FROM swift:6.1-focal AS build
-# ... build maestro ...
-FROM ghcr.io/home-assistant/amd64-addon-base:latest
+FROM ghcr.io/<owner>/maestro:latest
 ```
 
-When Home Assistant builds the add-on it pulls these images automatically. Local
+When Home Assistant builds the add-on it pulls this image automatically. Local
 builds behave the same way:
 
 ```bash

@@ -15,6 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.1"
+
+      - name: Run tests
+        run: swift test
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -46,7 +54,7 @@ jobs:
           file: ./maestro/Dockerfile
           platforms: linux/amd64,linux/arm64
           build-args: |
-            BUILD_FROM=ghcr.io/hassio-addons/base/amd64:13.2.0
+            MAESTRO_IMAGE=ghcr.io/${{ github.repository_owner }}/maestro:${{ github.ref_name }}
             BUILD_ARCH=amd64
             BUILD_VERSION=${{ github.ref_name }}
           push: true
