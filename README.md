@@ -83,6 +83,6 @@ When the selected scene is `preset`, maestro only turns off the `light.living_te
 
 For details on running maestro as a Home Assistant add-on, see [docs/addon.md](docs/addon.md).
 The add-on's Dockerfile builds the binary using `swift:6.1-focal` and
-uses `ghcr.io/home-assistant/amd64-addon-base:14` for the runtime image.
+uses `ghcr.io/home-assistant/amd64-addon-base:latest` for the runtime image.
 See [docs/devcontainer.md](docs/devcontainer.md) for more information.
 
