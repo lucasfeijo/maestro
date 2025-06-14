@@ -20,5 +20,6 @@
       "program": "str?"
     },
     "image": "ghcr.io/lucasfeijo/{arch}-maestro",
-    "arch": ["amd64", "armhf", "aarch64", "i386"]
+    "arch": ["amd64", "armhf", "aarch64", "i386"],
+    "init": false
   }
