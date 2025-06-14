@@ -23,7 +23,7 @@ Home Assistant expects this structure when cloning the repository as an add-on s
 
 The Dockerfile should:
 
-1. Use the Home Assistant add-on base image (`ghcr.io/home-assistant/amd64-addon-base:latest`) as both the build and runtime stage.
+1. Use the Home Assistant add-on base image (`ghcr.io/home-assistant/amd64-addon-base:14`) as both the build and runtime stage.
 2. Copy `.swift-version` and install the matching Swift release:
    ```Dockerfile
    COPY .swift-version /tmp/.swift-version
@@ -70,7 +70,7 @@ description: Home Assistant lights orchestrator
 startup: application
 boot: auto
 build_from:
-  amd64: ghcr.io/home-assistant/amd64-addon-base:latest
+  amd64: ghcr.io/home-assistant/amd64-addon-base:14
 options:
   baseurl: http://homeassistant.local:8123/
   token: ''
