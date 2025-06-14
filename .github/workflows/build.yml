@@ -28,6 +28,12 @@ jobs:
           mkdir -p maestro/rootfs/bin
           cp .build/release/maestro maestro/rootfs/bin/
 
+      - name: Get version from config
+        id: get_version
+        run: |
+          VERSION=$(jq -r '.version' maestro/config.json)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -53,3 +59,4 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/aarch64-maestro:latest
             ghcr.io/${{ github.repository_owner }}/aarch64-maestro:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/aarch64-maestro:${{ steps.get_version.outputs.version }}
