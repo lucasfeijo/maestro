@@ -1,7 +1,12 @@
-ARG MAESTRO_IMAGE
+ARG BUILD_FROM
 ARG BUILD_ARCH
 ARG BUILD_VERSION
-FROM ${MAESTRO_IMAGE}
+FROM ${BUILD_FROM}
+
+ARG TEMPIO_VERSION
+RUN \
+    curl -sSLf -o /usr/bin/tempio \
+    "https://github.com/home-assistant/tempio/releases/download/${TEMPIO_VERSION}/tempio_${BUILD_ARCH}"
 
 WORKDIR /app
 COPY run.sh /usr/local/bin/run.sh
