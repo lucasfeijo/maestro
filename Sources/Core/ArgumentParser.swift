@@ -6,6 +6,7 @@ struct MaestroOptions {
     var simulate: Bool = false
     var programName: String = "default"
     var notificationsEnabled: Bool = true
+    var port: Int32 = 8080
 }
 
 func parseArguments(_ args: [String]) -> MaestroOptions {
@@ -33,6 +34,12 @@ func parseArguments(_ args: [String]) -> MaestroOptions {
             options.programName = args[idx]
         } else if arg == "--no-notify" || arg == "--disable-notifications" {
             options.notificationsEnabled = false
+        } else if arg.hasPrefix("--port=") {
+            let value = String(arg.dropFirst("--port=".count))
+            if let p = Int32(value) { options.port = p }
+        } else if arg == "--port", idx + 1 < args.count {
+            idx += 1
+            if let p = Int32(args[idx]) { options.port = p }
         }
         idx += 1
     }

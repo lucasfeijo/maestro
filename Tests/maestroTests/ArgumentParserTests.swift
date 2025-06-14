@@ -8,7 +8,18 @@ final class ArgumentParserTests: XCTestCase {
     }
 
     func testNotificationsEnabledByDefault() {
-        let opts = parseArguments(["maestro"]) 
+        let opts = parseArguments(["maestro"])
         XCTAssertTrue(opts.notificationsEnabled)
+        XCTAssertEqual(opts.port, 8080)
+    }
+
+    func testPortFlagWithEquals() {
+        let opts = parseArguments(["maestro", "--port=9000"])
+        XCTAssertEqual(opts.port, 9000)
+    }
+
+    func testPortFlagWithSpace() {
+        let opts = parseArguments(["maestro", "--port", "1234"])
+        XCTAssertEqual(opts.port, 1234)
     }
 }
