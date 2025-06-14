@@ -23,18 +23,10 @@ Home Assistant expects this structure when cloning the repository as an add-on s
 
 The Dockerfile should:
 
-1. Use the Home Assistant add-on base image (`ghcr.io/home-assistant/amd64-addon-base:14`) as both the build and runtime stage.
-2. Copy `.swift-version` and install the matching Swift release:
-   ```Dockerfile
-   COPY .swift-version /tmp/.swift-version
-   RUN SWIFT_VERSION=$(cat /tmp/.swift-version) && \
-       curl -sL https://swift.org/builds/swift-${SWIFT_VERSION}-release/ubuntu2004/swift-${SWIFT_VERSION}-RELEASE/swift-${SWIFT_VERSION}-RELEASE-ubuntu20.04.tar.gz \
-         | tar xz -C /usr/ && \
-       ln -s /usr/swift-${SWIFT_VERSION}-RELEASE-ubuntu20.04/usr/bin/swift /usr/bin/swift
-   ```
-3. Copy the repository into the container and run `swift build -c release` to produce the `maestro` binary.
-4. Copy the compiled `maestro` binary and the `run.sh` script into the runtime image.
-5. Set `run.sh` as the container entrypoint.
+1. Use `swift:6.1-focal` to compile the project and `ghcr.io/home-assistant/amd64-addon-base:latest` as the runtime image.
+2. Copy the repository into the container and run `swift build -c release` to produce the `maestro` binary.
+3. Copy the compiled `maestro` binary and the `run.sh` script into the runtime image.
+4. Set `run.sh` as the container entrypoint.
 
 This multi-stage build keeps the final image small while compiling the Swift code during the build step.
 
@@ -70,7 +62,7 @@ description: Home Assistant lights orchestrator
 startup: application
 boot: auto
 build_from:
-  amd64: ghcr.io/home-assistant/amd64-addon-base:14
+  amd64: ghcr.io/home-assistant/amd64-addon-base:latest
 options:
   baseurl: http://homeassistant.local:8123/
   token: ''
